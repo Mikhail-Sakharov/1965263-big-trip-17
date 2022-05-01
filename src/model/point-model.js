@@ -7,8 +7,3 @@ export default class PointModel {
     return this.points;
   }
 }
-
-const pointsArray = new PointModel();
-
-// eslint-disable-next-line no-console
-console.log(pointsArray.getPoints());

@@ -55,7 +55,7 @@ const Offers = [
   ''
 ]; */
 
-function getRandomPointProp(set, min, max) {
+function getRandomValue(set, min, max) {
   if (set) {
     min = 0;
     max = set.length - 1;
@@ -66,14 +66,14 @@ function getRandomPointProp(set, min, max) {
 }
 
 function createPictures(destinationName) {
-  return Array.from({length: getRandomPointProp(0, 1, 5)}, () => ({
+  return Array.from({length: getRandomValue(0, 1, 5)}, () => ({
     src: 'http://picsum.photos/300/200?r=0.0762563005163317',
     description: `${destinationName} parliament building`
   }));
 }
 
 function generateDestination() {
-  const destinationName = getRandomPointProp(DestinationNames, 0, 22);
+  const destinationName = getRandomValue(DestinationNames, 0, 22);
   return {
     pointName: destinationName,
     description: `${destinationName}, is a beautiful city.`,
@@ -82,30 +82,30 @@ function generateDestination() {
 }
 
 function generateOffers() {
-  return Array.from({length: getRandomPointProp(0, 1, 5)}, (item, index) => ({
+  return Array.from({length: getRandomValue(0, 1, 5)}, (item, index) => ({
     id: index,
     title: 'Upgrade to a business class',
-    price: getRandomPointProp(0, 30, 500)
+    price: getRandomValue(0, 30, 500)
   }));
 }
 
 function createOffers() {
-  return Array.from({length: getRandomPointProp(0, 1, 5)}, () => ({
-    type: getRandomPointProp(PointTypes, 0, 8),
+  return Array.from({length: getRandomValue(0, 1, 5)}, () => ({
+    type: getRandomValue(PointTypes, 0, 8),
     offers: generateOffers()
   }));
 }
 
 function createPoint() {
   return {
-    basePrice: getRandomPointProp(0, 500, 5000),
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    basePrice: getRandomValue(0, 500, 5000),
+    dateFrom: '2019-07-01T18:45:56.845Z',
+    dateTo: '2019-07-11T18:45:56.845Z',
     destination: generateDestination(),
     id: getPointId(),
-    isFavorite: Boolean(getRandomPointProp(0, 0, 1)),
+    isFavorite: Boolean(getRandomValue(0, 0, 1)),
     offers: createOffers(),
-    type: getRandomPointProp(PointTypes, 0, 8)
+    type: getRandomValue(PointTypes, 0, 8)
   };
 }
 
