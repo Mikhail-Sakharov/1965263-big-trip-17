@@ -4,18 +4,35 @@ const PointsIdCount = {
   MIN: 1,
   MAX: 100
 };
+const HOUR_MINUTES_COUNT = 60;
+const TOTAL_DAY_MINUTES_COUNT = 1440;
+const DATE_FORMATE = 'YYYY-MM-DD';
+const DATE_TIME_FORMATE = 'DD/MM/YY hh:mm';
 
 const humanizePointDueDate = (date) => dayjs(date).format('DD MMM');
 
-function duration(a, b) {
-  const date1 = dayjs(a);
-  const date2 = dayjs(b);
+function duration(dateFrom, dateTo) {
+  const date1 = dayjs(dateFrom);
+  const date2 = dayjs(dateTo);
+  const difference = date2.diff(date1, 'minute');
 
-  return date2.diff(date1, 'minute');
+  const days = Math.floor(difference/TOTAL_DAY_MINUTES_COUNT);
+  const restHours = Math.floor((difference - days * TOTAL_DAY_MINUTES_COUNT)/HOUR_MINUTES_COUNT);
+  const restMinutes = difference - (days * TOTAL_DAY_MINUTES_COUNT + restHours * HOUR_MINUTES_COUNT);
+
+  const daysOutput = (days) ? `${days}D` : '';
+  const hoursOutput = (restHours) ? `${restHours}H` : '';
+  const minutesOutput = (restMinutes) ? `${restMinutes}M` : '';
+
+  return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
 }
 
 function getDate(date) {
-  return dayjs(date). format('YYYY-MM-DD');
+  return dayjs(date).format(DATE_FORMATE);
+}
+
+function getDateTime(date) {
+  return dayjs(date).format(DATE_TIME_FORMATE);
 }
 
 function getRandom (min, max) {
@@ -35,4 +52,4 @@ function getPointId() {
   return id;
 }
 
-export {getRandom, getPointId, humanizePointDueDate, duration, getDate};
+export {getRandom, getPointId, humanizePointDueDate, duration, getDate, getDateTime};

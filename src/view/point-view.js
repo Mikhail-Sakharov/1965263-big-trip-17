@@ -1,20 +1,27 @@
 import {createElement} from '../render.js';
 import {humanizePointDueDate, duration, getDate} from '../util.js';
 
-const offerTitle = 'Order Uber';
-const offerPrice = '20';
+function renderOffers(offers) {
+  let result = '';
+  offers.forEach((item) => {
+    item.offers.forEach((elem) => {
+      result = `${result  }<li class="event__offer"><span class="event__offer-title">${elem.title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${elem.price}</span></li>`;
+    });
+  });
+  return result;
+}
 
 function createPointTemplate(point) {
-  const {type, destination, basePrice, isFavorite, dateFrom, dateTo} = point;
+  const {type, destination, basePrice, isFavorite, dateFrom, dateTo, offers} = point;
 
   const startDate = dateFrom !== null ? humanizePointDueDate(dateFrom) : '';
   const endDate = dateTo !== null ? humanizePointDueDate(dateTo) : '';
-  const date = getDate(dateFrom);
+  const eventDuration = duration(dateFrom, dateTo);
 
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${date}">${startDate}</time>
+        <time class="event__date" datetime="${getDate(dateFrom)}">${startDate}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
@@ -25,18 +32,14 @@ function createPointTemplate(point) {
             &mdash;
             <time class="event__end-time" datetime="${dateTo}">${endDate}</time>
           </p>
-          <p class="event__duration">${duration(dateFrom, dateTo)}M</p>
+          <p class="event__duration">${eventDuration}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">${offerTitle}</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">${offerPrice}</span>
-          </li>
+          ${renderOffers(offers)}
         </ul>
         <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
           <span class="visually-hidden">Add to favorite</span>

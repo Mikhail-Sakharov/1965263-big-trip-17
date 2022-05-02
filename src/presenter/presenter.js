@@ -24,4 +24,4 @@ for (let i=0; i<points.length; i++) {
 
 render(new ListItemView(), listElement, RenderPosition.AFTERBEGIN);
 const firstPointElement = tripPointsContainerElement.querySelector('.trip-events__item');
-render(new EditPointView(), firstPointElement, RenderPosition.AFTERBEGIN);
+render(new EditPointView(points[0]), firstPointElement, RenderPosition.AFTERBEGIN);

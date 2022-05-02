@@ -27,34 +27,6 @@ const DestinationNames = [
   'Suzdal'
 ];
 
-/* const Descriptions = [
-  'is a beautiful city',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  ''
-];
-
-const Offers = [
-  'Upgrade to a business class',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  ''
-]; */
-
 function getRandomValue(set, min, max) {
   if (set) {
     min = 0;
@@ -67,7 +39,7 @@ function getRandomValue(set, min, max) {
 
 function createPictures(destinationName) {
   return Array.from({length: getRandomValue(0, 1, 5)}, () => ({
-    src: 'http://picsum.photos/300/200?r=0.0762563005163317',
+    src: `http://picsum.photos/248/152?r=${getRandom(1, 100)}`,
     description: `${destinationName} parliament building`
   }));
 }
@@ -82,15 +54,15 @@ function generateDestination() {
 }
 
 function generateOffers() {
-  return Array.from({length: getRandomValue(0, 1, 5)}, (item, index) => ({
+  return Array.from({length: getRandomValue(0, 1, 2)}, (item, index) => ({
     id: index,
-    title: 'Upgrade to a business class',
+    title: 'Upgrade',
     price: getRandomValue(0, 30, 500)
   }));
 }
 
 function createOffers() {
-  return Array.from({length: getRandomValue(0, 1, 5)}, () => ({
+  return Array.from({length: getRandomValue(0, 1, 2)}, () => ({
     type: getRandomValue(PointTypes, 0, 8),
     offers: generateOffers()
   }));
@@ -99,8 +71,8 @@ function createOffers() {
 function createPoint() {
   return {
     basePrice: getRandomValue(0, 500, 5000),
-    dateFrom: '2019-07-01T18:45:56.845Z',
-    dateTo: '2019-07-11T18:45:56.845Z',
+    dateFrom: '2019-07-01T13:00:56.845Z',
+    dateTo: '2019-07-09T14:30:56.845Z',
     destination: generateDestination(),
     id: getPointId(),
     isFavorite: Boolean(getRandomValue(0, 0, 1)),
