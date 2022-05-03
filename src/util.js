@@ -12,9 +12,9 @@ const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
 const humanizePointDueDate = (date) => dayjs(date).format('DD MMM');
 
 function duration(dateFrom, dateTo) {
-  const date1 = dayjs(dateFrom);
-  const date2 = dayjs(dateTo);
-  const difference = date2.diff(date1, 'minute');
+  const start = dayjs(dateFrom);
+  const end = dayjs(dateTo);
+  const difference = end.diff(start, 'minute');
 
   const days = Math.floor(difference/TOTAL_DAY_MINUTES_COUNT);
   const restHours = Math.floor((difference - days * TOTAL_DAY_MINUTES_COUNT)/HOUR_MINUTES_COUNT);
@@ -35,9 +35,9 @@ function getDateTime(date) {
   return dayjs(date).format(DATE_TIME_FORMAT);
 }
 
-function getRandom (min, max) {
-  [min, max]=[Math.abs(min), Math.abs(max)];
-  if (max < min) {[min, max]=[max, min];}
+function getRandom (from, to) {
+  const min = Math.min(Math.abs(from), Math.abs(to));
+  const max = Math.max(Math.abs(from), Math.abs(to));
   return Math.round(min + (max - min) * Math.random());
 }
 
