@@ -6,8 +6,8 @@ const PointsIdCount = {
 };
 const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
-const DATE_FORMATE = 'YYYY-MM-DD';
-const DATE_TIME_FORMATE = 'DD/MM/YY hh:mm';
+const DATE_FORMAT = 'YYYY-MM-DD';
+const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
 
 const humanizePointDueDate = (date) => dayjs(date).format('DD MMM');
 
@@ -28,11 +28,11 @@ function duration(dateFrom, dateTo) {
 }
 
 function getDate(date) {
-  return dayjs(date).format(DATE_FORMATE);
+  return dayjs(date).format(DATE_FORMAT);
 }
 
 function getDateTime(date) {
-  return dayjs(date).format(DATE_TIME_FORMATE);
+  return dayjs(date).format(DATE_TIME_FORMAT);
 }
 
 function getRandom (min, max) {
