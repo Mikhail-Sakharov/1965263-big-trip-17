@@ -38,8 +38,10 @@ const DESTINATION_NAMES = [
   'Suzdal'
 ];
 
-function getRandomValue(set, min, max) {
-  return set[getRandom(min, max)];
+function getRandomValue(set) {
+  const MIN = 0;
+  const max = set.length - 1;
+  return set[getRandom(MIN, max)];
 }
 
 function createPictures(destinationName) {
@@ -50,7 +52,7 @@ function createPictures(destinationName) {
 }
 
 function generateDestination() {
-  const destinationName = getRandomValue(DESTINATION_NAMES, 0, 22);
+  const destinationName = getRandomValue(DESTINATION_NAMES);
   return {
     pointName: destinationName,
     description: `${destinationName}, is a beautiful city.`,
@@ -68,7 +70,7 @@ function generateOffers() {
 
 function createOffers() {
   return Array.from({length: getRandom(1, 2)}, () => ({
-    type: getRandomValue(POINT_TYPES, 0, 8),
+    type: getRandomValue(POINT_TYPES),
     offers: generateOffers()
   }));
 }
@@ -82,7 +84,7 @@ function createPoint() {
     id: getPointId(),
     isFavorite: Boolean(getRandom(0, 1)),
     offers: createOffers(),
-    type: getRandomValue(POINT_TYPES, 0, 8)
+    type: getRandomValue(POINT_TYPES)
   };
 }
 
