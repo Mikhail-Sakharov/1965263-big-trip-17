@@ -1,4 +1,4 @@
-import {getRandom, getPointId} from '../util.js';
+import {getRandom, getId} from '../util.js';
 
 const POINT_TYPES = [
   'taxi',
@@ -60,19 +60,25 @@ function generateDestination() {
   };
 }
 
-function generateOffers() {
+/* function generateOffers() {
   return Array.from({length: getRandom(1, 2)}, (item, index) => ({
     id: index,
     title: 'Upgrade',
     price: getRandom(30, 500)
   }));
-}
+} */
 
-function createOffers() {
+/* function createOffers() {
   return Array.from({length: getRandom(1, 2)}, () => ({
     type: getRandomValue(POINT_TYPES),
     offers: generateOffers()
   }));
+} */
+
+function createOffers() {
+  const randomArray = Array.from({length: getRandom(1, 3)}, () => getRandom(1, 3));
+  const set = new Set(randomArray);
+  return Array.from(set);
 }
 
 function createPoint() {
@@ -81,7 +87,7 @@ function createPoint() {
     dateFrom: '2019-07-01T13:00:56.845Z',
     dateTo: '2019-07-09T14:30:56.845Z',
     destination: generateDestination(),
-    id: getPointId(),
+    id: getId(),
     isFavorite: Boolean(getRandom(0, 1)),
     offers: createOffers(),
     type: getRandomValue(POINT_TYPES)
