@@ -2,29 +2,46 @@ import {createElement} from '../render.js';
 import {getDateTime} from '../util.js';
 import {OFFERS} from '../mock/offers.js';
 
-function renderDestinationPictures(pictures) {
+function renderDestinationPictures(pictures, description) {
   let result = '';
-  pictures.forEach((item) => {
-    result = `${result  }<img class="event__photo" src="${item.src}" alt="Event photo">`;
-  });
+  if (pictures !== null) {
+    pictures.forEach((item) => {
+      result = `${result  }<img class="event__photo" src="${item.src}" alt="Event photo">`;
+    });
+    result = `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+                <p class="event__destination-description">${description !== null ? description : ''}</p>
+                <div class="event__photos-container">
+                  <div class="event__photos-tape">
+                    ${result}
+                  </div>
+                </div>`;
+  } else {result = '';}
   return result;
 }
 
-function renderOffers(eventType, offers) {
+function renderOffers(eventType, checkedOffers) {
   let result = '';
   OFFERS.forEach((item) => {
     if (item.type === eventType) {
-      item.offers.forEach((elem) => {
-        const checked = offers.includes(elem.id) ? 'checked' : '';
-        result = `${result  }<div class="event__offer-selector">
-                          <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1"   type="checkbox" name="event-offer-luggage" ${checked}>
-                          <label class="event__offer-label" for="event-offer-luggage-1">
-                            <span class="event__offer-title">${elem.title}</span>
-                            &plus;&euro;&nbsp;
-                            <span class="event__offer-price">${elem.price}</span>
-                          </label>
-                        </div>`;
-      });
+      if (checkedOffers !== null && item.offers !== null) {
+        item.offers.forEach((elem) => {
+          const checked = checkedOffers.includes(elem.id) ? 'checked' : '';
+          const label = `${eventType}-${elem.id}`;
+          result = `${result  }            
+                <div class="event__offer-selector">
+                  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${label}" type="checkbox" name="event-offer-${label}" ${checked}>
+                  <label class="event__offer-label" for="event-offer-${label}">
+                    <span class="event__offer-title">${elem.title}</span>
+                    &plus;&euro;&nbsp;
+                    <span class="event__offer-price">${elem.price}</span>
+                  </label>
+                </div>`;
+        });
+        result = `<h3 class="event__section-title  event__section-title--offers">Offers</h3> 
+                  <div class="event__available-offers">
+                    ${result}
+                  </div>`;
+      } else {result = '';}
     }
   });
   return result;
@@ -34,12 +51,10 @@ function createEditPointTemplate(point = {}) {
   const {type, destination, basePrice, dateFrom, dateTo, offers} = point;
 
   const destinationName = destination.pointName !== null ? destination.pointName : '';
-  const destinationDescription = destination.description !== null ? destination.description : '';
   const startDate = dateFrom !== null ? getDateTime(dateFrom) : '';
   const endDate = dateTo !== null ? getDateTime(dateTo) : '';
   const price = basePrice !== null ? basePrice : '';
   const eventType = type !== null ? type : 'flight';
-  const destinationPictures = destination.pictures !== null ? renderDestinationPictures(destination.pictures) : '';
 
   return (`<li class="trip-events__item">
              <form class="event event--edit" action="#" method="post">
@@ -123,19 +138,10 @@ function createEditPointTemplate(point = {}) {
                </header>
                <section class="event__details">
                  <section class="event__section  event__section--offers">
-                   <h3 class="event__section-title  event__section-title--offers">Offers</h3> 
-                   <div class="event__available-offers">
-                     ${renderOffers(eventType, offers)}
-                   </div>
+                   ${renderOffers(eventType, offers)}                   
                  </section> 
                  <section class="event__section  event__section--destination">
-                   <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                   <p class="event__destination-description">${destinationDescription}</p>
-                   <div class="event__photos-container">
-                     <div class="event__photos-tape">
-                       ${destinationPictures}
-                     </div>
-                   </div>
+                   ${renderDestinationPictures(destination.pictures, destination.description)}
                  </section>
                </section>
              </form>

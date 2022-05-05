@@ -1,12 +1,24 @@
 import {createElement} from '../render.js';
 import {humanizePointDueDate, duration, getDate} from '../util.js';
+import {OFFERS} from '../mock/offers.js';
 
-function renderOffers(offers) {
+function renderOffers(eventType, checkedOffers) {
   let result = '';
-  offers.forEach((item) => {
-    item.offers.forEach((elem) => {
-      result = `${result  }<li class="event__offer"><span class="event__offer-title">${elem.title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${elem.price}</span></li>`;
-    });
+  OFFERS.forEach((item) => {
+    if (item.type === eventType) {
+      if (checkedOffers !== null && item.offers !== null) {
+        item.offers.forEach((elem) => {
+          if (checkedOffers.includes(elem.id)) {
+            result = `${result  }            
+                      <li class="event__offer"><span class="event__offer-title">${elem.title}<span>&plus;&euro;&nbsp;<span class="event__offer-price">${elem.price}</span></li>`;
+          }
+        });
+        result = `<h4 class="visually-hidden">Offers:</h4>
+                  <ul class="event__selected-offers">
+                    ${result}
+                  </ul>`;
+      } else {result = '';}
+    }
   });
   return result;
 }
@@ -40,11 +52,8 @@ function createPointTemplate(point) {
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>
-        </p>
-        <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
-          ${renderOffers(offers)}
-        </ul>
+        </p>        
+          ${renderOffers(eventType, offers)}        
         <button class="event__favorite-btn ${activeFavoriteButtonClass}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">

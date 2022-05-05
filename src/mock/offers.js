@@ -21,63 +21,15 @@ export const OFFERS = [
   },
   {
     type: 'bus',
-    offers: [
-      {
-        id: 1,
-        title: 'Unlimited for a day',
-        price: 45
-      },
-      {
-        id: 2,
-        title: 'Next to the driver',
-        price: 30
-      },
-      {
-        id: 3,
-        title: 'Optional stops',
-        price: 55
-      }
-    ]
+    offers: null
   },
   {
     type: 'train',
-    offers: [
-      {
-        id: 1,
-        title: 'Without neighbours',
-        price: 200
-      },
-      {
-        id: 2,
-        title: 'Inside the cocpit',
-        price: 300
-      },
-      {
-        id: 3,
-        title: 'Go to Odessa',
-        price: 1000
-      }
-    ]
+    offers: null
   },
   {
     type: 'ship',
-    offers: [
-      {
-        id: 1,
-        title: 'First class',
-        price: 250
-      },
-      {
-        id: 2,
-        title: 'Second class',
-        price: 180
-      },
-      {
-        id: 3,
-        title: 'Third class',
-        price: 100
-      }
-    ]
+    offers: null
   },
   {
     type: 'drive',

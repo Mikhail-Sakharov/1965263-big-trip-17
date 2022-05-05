@@ -60,21 +60,6 @@ function generateDestination() {
   };
 }
 
-/* function generateOffers() {
-  return Array.from({length: getRandom(1, 2)}, (item, index) => ({
-    id: index,
-    title: 'Upgrade',
-    price: getRandom(30, 500)
-  }));
-} */
-
-/* function createOffers() {
-  return Array.from({length: getRandom(1, 2)}, () => ({
-    type: getRandomValue(POINT_TYPES),
-    offers: generateOffers()
-  }));
-} */
-
 function createOffers() {
   const randomArray = Array.from({length: getRandom(1, 3)}, () => getRandom(1, 3));
   const set = new Set(randomArray);
