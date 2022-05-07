@@ -17,10 +17,48 @@ export default class ListPresenter {
 
     render(this.#listComponent, this.listContainer, RenderPosition.AFTERBEGIN);
     render(new SortView(), this.#listComponent.element, RenderPosition.AFTERBEGIN);
-    render(new EditPointView(points[0]), this.#listComponent.element, RenderPosition.BEFOREEND);
     points.forEach((item) => {
-      render(new PointView(item), this.#listComponent.element, RenderPosition.BEFOREEND);
+      this.#renderPoint(item);
     });
 
+  };
+
+  #renderPoint = (point) => {
+    const pointComponent = new PointView(point);
+    const editPointComponent = new EditPointView(point);
+
+    const replacePointToForm = () => {
+      this.#listComponent.element.replaceChild(editPointComponent.element, pointComponent.element);
+    };
+
+    const replaceFormToPoint = () => {
+      this.#listComponent.element.replaceChild(pointComponent.element, editPointComponent.element);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replacePointToForm();
+      document.addEventListener('keydown', onEscKeyDown);
+    });
+
+    editPointComponent.element.querySelector('form').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    editPointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    render(pointComponent, this.#listComponent.element);
   };
 }
