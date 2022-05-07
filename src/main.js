@@ -5,7 +5,7 @@ import ListPresenter from './presenter/presenter.js';
 import PointModel from './model/point-model.js';
 
 const pointsArray = new PointModel();
-const points = pointsArray.getPoints();
+const points = pointsArray.points;
 const destinationNames = points.map((item) => item.destination.pointName);
 const titleContainer = document.querySelector('.trip-main');
 const filtersContainerElement = document.querySelector('.trip-controls__filters');

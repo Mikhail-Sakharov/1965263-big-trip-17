@@ -19,23 +19,25 @@ function createTitleTemplate(destinationNames, totalPrice='0', date='') {
 }
 
 export default class TitleView {
+  #element = null;
+
   constructor(destinationNames) {
     this.destinationNames = destinationNames;
   }
 
-  getTemplate() {
+  get template() {
     return createTitleTemplate(this.destinationNames);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
