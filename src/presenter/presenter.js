@@ -2,24 +2,63 @@ import {render, RenderPosition} from '../render.js';
 import SortView from '../view/sort-view.js';
 import ListView from '../view/list-view.js';
 import EditPointView from '../view/edit-point-view.js';
+import EmptyListView from '../view/empty-list-msg.js';
 import PointView from '../view/point-view.js';
-import PointModel from '../model/point-model.js';
-
-const pointsArray = new PointModel();
-const points = pointsArray.getPoints();
 
 export default class ListPresenter {
-  ListComponent = new ListView();
+  #listComponent = new ListView();
 
-  init = (listContainer) => {
+  init = (listContainer, points) => {
     this.listContainer = listContainer;
 
-    render(this.ListComponent, this.listContainer, RenderPosition.AFTERBEGIN);
-    render(new SortView(), this.ListComponent.getElement(), RenderPosition.AFTERBEGIN);
-    render(new EditPointView(points[0]), this.ListComponent.getElement(), RenderPosition.BEFOREEND);
+    if (!points) {
+      render(new EmptyListView(), this.listContainer, RenderPosition.AFTERBEGIN);
+    } //00:54:10 list-empty message
+
+    render(this.#listComponent, this.listContainer, RenderPosition.AFTERBEGIN);
+    render(new SortView(), this.#listComponent.element, RenderPosition.AFTERBEGIN);
     points.forEach((item) => {
-      render(new PointView(item), this.ListComponent.getElement(), RenderPosition.BEFOREEND);
+      this.#renderPoint(item);
     });
 
+  };
+
+  #renderPoint = (point) => {
+    const pointComponent = new PointView(point);
+    const editPointComponent = new EditPointView(point);
+
+    const replacePointToForm = () => {
+      this.#listComponent.element.replaceChild(editPointComponent.element, pointComponent.element);
+    };
+
+    const replaceFormToPoint = () => {
+      this.#listComponent.element.replaceChild(pointComponent.element, editPointComponent.element);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replacePointToForm();
+      document.addEventListener('keydown', onEscKeyDown);
+    });
+
+    editPointComponent.element.querySelector('form').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    editPointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    render(pointComponent, this.#listComponent.element);
   };
 }

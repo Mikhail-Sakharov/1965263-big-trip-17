@@ -42,7 +42,7 @@ function getRandom (from, to) {
 }
 
 const pointsId = [];              // массив для хранения уникальных id для комментариев
-function getPointId() {
+function getId() {
   let id = getRandom(PointsIdCount.MIN, PointsIdCount.MAX);
   while (pointsId.some((item) => item === id)) {
     id = getRandom(PointsIdCount.MIN, PointsIdCount.MAX);
@@ -52,4 +52,4 @@ function getPointId() {
   return id;
 }
 
-export {getRandom, getPointId, humanizePointDueDate, duration, getDate, getDateTime};
+export {getRandom, getId, humanizePointDueDate, duration, getDate, getDateTime};
