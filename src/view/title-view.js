@@ -1,9 +1,11 @@
 import {createElement} from '../render.js';
 
+const DESTINATION_NAMES_MAX_COUNT = 3;
+
 function createTitleTemplate(destinationNames, totalPrice='0', date='') {
   const set = new Set(destinationNames);
   const names = Array.from(set);
-  const title = names.length <= 3 ? names.join('-') : `${names[0]} — ... — ${names[names.length - 1]}`;
+  const title = names.length <= DESTINATION_NAMES_MAX_COUNT ? names.join('-') : `${names[0]} — ... — ${names[names.length - 1]}`;
 
   return `<section class="trip-main__trip-info  trip-info">
             <div class="trip-info__main">
