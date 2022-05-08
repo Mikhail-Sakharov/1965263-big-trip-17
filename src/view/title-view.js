@@ -2,7 +2,7 @@ import {createElement} from '../render.js';
 
 const DESTINATION_NAMES_MAX_COUNT = 3;
 
-function createTitleTemplate(destinationNames, totalPrice='0', date='') {
+function createTitleTemplate(destinationNames, totalPrice, duration) {
   const set = new Set(destinationNames);
   const names = Array.from(set);
   const title = names.length <= DESTINATION_NAMES_MAX_COUNT ? names.join('-') : `${names[0]} — ... — ${names[names.length - 1]}`;
@@ -11,7 +11,7 @@ function createTitleTemplate(destinationNames, totalPrice='0', date='') {
             <div class="trip-info__main">
               <h1 class="trip-info__title">${title}</h1>
 
-              <p class="trip-info__dates">${date}</p>
+              <p class="trip-info__dates">${duration}</p>
             </div>
 
             <p class="trip-info__cost">
@@ -23,12 +23,14 @@ function createTitleTemplate(destinationNames, totalPrice='0', date='') {
 export default class TitleView {
   #element = null;
 
-  constructor(destinationNames) {
+  constructor(destinationNames, pointsTotalPrice, titleDuration) {
     this.destinationNames = destinationNames;
+    this.pointsTotalPrice = pointsTotalPrice;
+    this.titleDuration = titleDuration;
   }
 
   get template() {
-    return createTitleTemplate(this.destinationNames);
+    return createTitleTemplate(this.destinationNames, this.pointsTotalPrice, this.titleDuration);
   }
 
   get element() {

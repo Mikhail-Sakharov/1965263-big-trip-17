@@ -1,15 +1,24 @@
 import {createElement} from '../render.js';
 
-function createTitleTemplate() {
-  const message = 'Click New Event to create your first point';
-  return `<p class="trip-events__msg">${message}</p>`;
+function createTitleTemplate(filterValue) {
+  const messages = {
+    'everything': 'Click New Event to create your first point',
+    'future': 'There are no future events now',
+    'past': 'There are no past events now'
+  };
+
+  return `<p class="trip-events__msg">${messages[filterValue]}</p>`;
 }
 
 export default class EmptyListView {
   #element = null;
 
+  constructor(filterValue) {
+    this.filterValue = filterValue;
+  }
+
   get template() {
-    return createTitleTemplate();
+    return createTitleTemplate(this.filterValue);
   }
 
   get element() {
