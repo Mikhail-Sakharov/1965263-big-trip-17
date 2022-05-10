@@ -8,34 +8,22 @@ import {returnTitleDuration} from './util.js';
 
 const pointsArray = new PointModel();
 const points = pointsArray.points;
-const destinationNames = points.map((item) => item.destination.pointName);
+const destinationNames = points.map((point) => point.destination.pointName);
 const titleContainer = document.querySelector('.trip-main');
 const filtersContainerElement = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = document.querySelector('.trip-events');
 const listPresenter = new ListPresenter();
 
+function calculatePrice(pointsData, allOffers) {
+  const eventsTotalPrice = pointsData.reduce((totalPrice, point) => totalPrice + point.basePrice + (
+    point.offers.reduce((offersTotalPrice, offerId) => offersTotalPrice + allOffers.find((offersBlock) => offersBlock.type === point.type).offers.find((offer) => offer.id === offerId).price, 0)
+  ), 0);
+
+  return eventsTotalPrice;
+}
+
 if (points && points.length !== 0) {
-  const eventsTotalPrice = points.reduce((sum, item) => sum + item.basePrice, 0);
-  let offersTotalPrice = 0;
-
-  points.forEach((element) => {
-    const eventType = element.type;
-    const checkedOffers = element.offers;
-
-    OFFERS.forEach((item) => {
-      if (item.type === eventType) {
-        if (checkedOffers !== null && item.offers !== null) {
-          item.offers.forEach((elem) => {
-            if (checkedOffers.includes(elem.id)) {
-              offersTotalPrice += elem.price;
-            }
-          });
-        } else {offersTotalPrice += 0;}
-      }
-    });
-  });
-
-  const totalPrice = eventsTotalPrice + offersTotalPrice;
+  const totalPrice = calculatePrice(points, OFFERS);
   const titleDuration = returnTitleDuration(points[0].dateFrom, points[points.length-1].dateTo);
 
   render(new TitleView(destinationNames, totalPrice, titleDuration), titleContainer, RenderPosition.AFTERBEGIN);

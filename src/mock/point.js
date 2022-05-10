@@ -67,8 +67,9 @@ function createOffers() {
 }
 
 function createPoint() {
+  const typesWithoutOffers = ['bus', 'train', 'ship'];
   const type = getRandomValue(POINT_TYPES);
-  const offers = ['bus', 'train', 'ship'].includes(type) ? [] : createOffers();
+  const offers = typesWithoutOffers.includes(type) ? [] : createOffers();
 
   return {
     basePrice: getRandom(500, 5000),
