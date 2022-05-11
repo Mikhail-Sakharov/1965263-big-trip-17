@@ -67,6 +67,10 @@ function createOffers() {
 }
 
 function createPoint() {
+  const TYPES_WITHOUT_OFFERS = ['bus', 'train', 'ship'];
+  const type = getRandomValue(POINT_TYPES);
+  const offers = TYPES_WITHOUT_OFFERS.includes(type) ? [] : createOffers();
+
   return {
     basePrice: getRandom(500, 5000),
     dateFrom: '2019-07-01T13:00:56.845Z',
@@ -74,8 +78,8 @@ function createPoint() {
     destination: generateDestination(),
     id: getId(),
     isFavorite: Boolean(getRandom(0, 1)),
-    offers: createOffers(),
-    type: getRandomValue(POINT_TYPES)
+    offers,
+    type
   };
 }
 

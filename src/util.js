@@ -9,7 +9,19 @@ const TOTAL_DAY_MINUTES_COUNT = 1440;
 const DATE_FORMAT = 'YYYY-MM-DD';
 const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
 
-const humanizePointDueDate = (date) => dayjs(date).format('DD MMM');
+function humanizePointDueDate(date) {
+  return dayjs(date).format('DD MMM');
+}
+
+function returnTitleDuration(startDate, endDate) {
+  const startDateMonth = dayjs(startDate).format('MMM');
+  const endDateMonth = dayjs(endDate).format('MMM');
+
+  const startDateDay = dayjs(startDate).format('DD');
+  const endDateDay = dayjs(endDate).format('DD');
+
+  return startDateMonth === endDateMonth ? `${startDateMonth} ${startDateDay} - ${endDateDay}` : `${startDateMonth} ${startDateDay} - ${endDateMonth} ${endDateDay}`;
+}
 
 function duration(dateFrom, dateTo) {
   const start = dayjs(dateFrom);
@@ -52,4 +64,4 @@ function getId() {
   return id;
 }
 
-export {getRandom, getId, humanizePointDueDate, duration, getDate, getDateTime};
+export {getRandom, getId, humanizePointDueDate, returnTitleDuration, duration, getDate, getDateTime};

@@ -5,22 +5,25 @@ import EditPointView from '../view/edit-point-view.js';
 import EmptyListView from '../view/empty-list-msg.js';
 import PointView from '../view/point-view.js';
 
+import FiltersView from '../view/filters-view.js';
+
 export default class ListPresenter {
   #listComponent = new ListView();
 
   init = (listContainer, points) => {
     this.listContainer = listContainer;
 
-    if (!points) {
-      render(new EmptyListView(), this.listContainer, RenderPosition.AFTERBEGIN);
-    } //00:54:10 list-empty message
-
-    render(this.#listComponent, this.listContainer, RenderPosition.AFTERBEGIN);
-    render(new SortView(), this.#listComponent.element, RenderPosition.AFTERBEGIN);
-    points.forEach((item) => {
-      this.#renderPoint(item);
-    });
-
+    if (!points || points.length === 0) {
+      const filters = new FiltersView();
+      const filterValue = filters.element.querySelector('input[name="trip-filter"]:checked').value;
+      render(new EmptyListView(filterValue), this.listContainer, RenderPosition.AFTERBEGIN);
+    } else {
+      render(this.#listComponent, this.listContainer, RenderPosition.AFTERBEGIN);
+      render(new SortView(), this.#listComponent.element, RenderPosition.AFTERBEGIN);
+      points.forEach((item) => {
+        this.#renderPoint(item);
+      });
+    }
   };
 
   #renderPoint = (point) => {
@@ -36,7 +39,7 @@ export default class ListPresenter {
     };
 
     const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
+      if (['Escape', 'Esc'].includes(evt.key)) {
         evt.preventDefault();
         replaceFormToPoint();
         document.removeEventListener('keydown', onEscKeyDown);
