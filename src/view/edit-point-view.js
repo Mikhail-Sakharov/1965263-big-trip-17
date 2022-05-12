@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {getDateTime} from '../util.js';
 import {OFFERS} from '../mock/offers.js';
 
@@ -148,26 +148,15 @@ function createEditPointTemplate(point = {}) {
            </li>`);
 }
 
-export default class EditPointView {
+export default class EditPointView extends AbstractView {
   #element = null;
 
   constructor(point) {
+    super();
     this.point = point;
   }
 
   get template() {
     return createEditPointTemplate(this.point);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

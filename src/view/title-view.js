@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const DESTINATION_NAMES_MAX_COUNT = 3;
 
@@ -20,10 +20,11 @@ function createTitleTemplate(destinationNames, totalPrice, duration) {
           </section>`;
 }
 
-export default class TitleView {
+export default class TitleView extends AbstractView {
   #element = null;
 
   constructor(destinationNames, pointsTotalPrice, titleDuration) {
+    super();
     this.destinationNames = destinationNames;
     this.pointsTotalPrice = pointsTotalPrice;
     this.titleDuration = titleDuration;
@@ -31,17 +32,5 @@ export default class TitleView {
 
   get template() {
     return createTitleTemplate(this.destinationNames, this.pointsTotalPrice, this.titleDuration);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

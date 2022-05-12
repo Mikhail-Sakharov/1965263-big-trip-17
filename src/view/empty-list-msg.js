@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createTitleTemplate(filterValue) {
   const messages = {
@@ -10,26 +10,15 @@ function createTitleTemplate(filterValue) {
   return `<p class="trip-events__msg">${messages[filterValue]}</p>`;
 }
 
-export default class EmptyListView {
+export default class EmptyListView extends AbstractView {
   #element = null;
 
   constructor(filterValue) {
+    super();
     this.filterValue = filterValue;
   }
 
   get template() {
     return createTitleTemplate(this.filterValue);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
