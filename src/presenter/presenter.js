@@ -1,4 +1,4 @@
-import {render, RenderPosition} from '../framework/render.js';
+import {render, RenderPosition, replace} from '../framework/render.js';
 import SortView from '../view/sort-view.js';
 import ListView from '../view/list-view.js';
 import EditPointView from '../view/edit-point-view.js';
@@ -31,11 +31,13 @@ export default class ListPresenter {
     const editPointComponent = new EditPointView(point);
 
     const replacePointToForm = () => {
-      this.#listComponent.element.replaceChild(editPointComponent.element, pointComponent.element);
+      //this.#listComponent.element.replaceChild(editPointComponent.element, pointComponent.element);
+      replace(editPointComponent, pointComponent);
     };
 
     const replaceFormToPoint = () => {
-      this.#listComponent.element.replaceChild(pointComponent.element, editPointComponent.element);
+      //this.#listComponent.element.replaceChild(pointComponent.element, editPointComponent.element);
+      replace(pointComponent, editPointComponent);
     };
 
     const onEscKeyDown = (evt) => {
