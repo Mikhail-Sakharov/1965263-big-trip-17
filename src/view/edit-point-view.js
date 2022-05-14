@@ -1,6 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {getDateTime} from '../util.js';
-import {OFFERS} from '../mock/offers.js';
 
 function renderDestinationPictures(pictures, description) {
   let result = '';
@@ -19,35 +18,33 @@ function renderDestinationPictures(pictures, description) {
   return result;
 }
 
-function renderOffers(eventType, checkedOffers) {
+function renderOffers(eventType, checkedOffers, allOffers) {
   let result = '';
-  OFFERS.forEach((item) => {
-    if (item.type === eventType) {
-      if (checkedOffers !== null && item.offers !== null) {
-        item.offers.forEach((elem) => {
-          const checked = checkedOffers.includes(elem.id) ? 'checked' : '';
-          const label = `${eventType}-${elem.id}`;
-          result = `${result  }            
-                <div class="event__offer-selector">
-                  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${label}" type="checkbox" name="event-offer-${label}" ${checked}>
-                  <label class="event__offer-label" for="event-offer-${label}">
-                    <span class="event__offer-title">${elem.title}</span>
-                    &plus;&euro;&nbsp;
-                    <span class="event__offer-price">${elem.price}</span>
-                  </label>
-                </div>`;
-        });
-        result = `<h3 class="event__section-title  event__section-title--offers">Offers</h3> 
+  if (checkedOffers !== null && allOffers !== null) {
+    allOffers.forEach((offer) => {
+      const offerTitle = offer.title;
+      const offerPrice = offer.price;
+      const checked = checkedOffers.includes(offer.id) ? 'checked' : '';
+      const label = `${eventType}-${offer.id}`;
+      result = `${result  }
+                  <div class="event__offer-selector">
+                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${label}"   type="checkbox" name="event-offer-${label}" ${checked}>
+                    <label class="event__offer-label" for="event-offer-${label}">
+                      <span class="event__offer-title">${offerTitle}</span>
+                      &plus;&euro;&nbsp;
+                      <span class="event__offer-price">${offerPrice}</span>
+                    </label>
+                  </div>`;
+    });
+  }
+  result = `<h3 class="event__section-title  event__section-title--offers">Offers</h3> 
                   <div class="event__available-offers">
                     ${result}
                   </div>`;
-      } else {result = '';}
-    }
-  });
   return result;
 }
 
-function createEditPointTemplate(point = {}) {
+function createEditPointTemplate(point, allOffers) {
   const {type, destination, basePrice, dateFrom, dateTo, offers} = point;
 
   const destinationName = destination.pointName !== null ? destination.pointName : '';
@@ -138,7 +135,7 @@ function createEditPointTemplate(point = {}) {
                </header>
                <section class="event__details">
                  <section class="event__section  event__section--offers">
-                   ${renderOffers(eventType, offers)}                   
+                   ${renderOffers(eventType, offers, allOffers)}                   
                  </section> 
                  <section class="event__section  event__section--destination">
                    ${renderDestinationPictures(destination.pictures, destination.description)}
@@ -149,15 +146,17 @@ function createEditPointTemplate(point = {}) {
 }
 
 export default class EditPointView extends AbstractView {
-  #element = null;
+  #point = null;
+  #offers = null;
 
-  constructor(point) {
+  constructor(point, offers) {
     super();
-    this.point = point;
+    this.#point = point;
+    this.#offers = offers;
   }
 
   get template() {
-    return createEditPointTemplate(this.point);
+    return createEditPointTemplate(this.#point, this.#offers);
   }
 
   setFormSubmitHandler = (callback) => {
