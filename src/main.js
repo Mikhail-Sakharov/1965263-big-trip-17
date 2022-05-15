@@ -28,6 +28,6 @@ if (points && points.length !== 0) {
 
   render(new TitleView(destinationNames, totalPrice, titleDuration), titleContainer, RenderPosition.AFTERBEGIN);
 }
-render(new FiltersView(), filtersContainerElement, RenderPosition.BEFOREEND);
+render(new FiltersView(points), filtersContainerElement, RenderPosition.BEFOREEND);
 
 listPresenter.init(tripEventsContainer, points);

@@ -6,6 +6,7 @@ import EmptyListView from '../view/empty-list-msg.js';
 import PointView from '../view/point-view.js';
 import FiltersView from '../view/filters-view.js';
 import {OFFERS} from '../mock/offers.js';
+import {DESTINATIONS} from '../mock/destinations.js';
 
 export default class ListPresenter {
   #listComponent = new ListView();
@@ -22,14 +23,14 @@ export default class ListPresenter {
       render(new SortView(), this.#listComponent.element, RenderPosition.AFTERBEGIN);
       points.forEach((point) => {
         const specifiedTypeOffers = OFFERS.find((offer) => offer.type === point.type).offers;
-        this.#renderPoint(point, specifiedTypeOffers);
+        this.#renderPoint(point, specifiedTypeOffers, DESTINATIONS);
       });
     }
   };
 
-  #renderPoint = (point, offers) => {
+  #renderPoint = (point, offers, destinations) => {
     const pointComponent = new PointView(point, offers);
-    const editPointComponent = new EditPointView(point, offers);
+    const editPointComponent = new EditPointView(point, offers, destinations);
 
     const replacePointToForm = () => {
       replace(editPointComponent, pointComponent);

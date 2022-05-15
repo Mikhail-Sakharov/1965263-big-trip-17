@@ -47,7 +47,7 @@ function generateDate() {
   const MAX_GAP = 1000;
   const minutesGap = getRandomInteger(-MAX_GAP, MAX_GAP);
 
-  return dayjs().add(minutesGap, 'minute').toDate();
+  return dayjs().add(minutesGap, 'minute').toISOString();
 }
 
 const pointsId = [];              // массив для хранения уникальных id для комментариев

@@ -13,29 +13,11 @@ const POINT_TYPES = [
 ];
 
 const DESTINATION_NAMES = [
-  'Amsterdam',
-  'Ankara',
-  'Barcelona',
-  'Budapest',
-  'Dublin',
-  'Dusseldorf',
   'Geneva',
+  'Amsterdam',
   'Helsinki',
-  'Istanbul',
-  'Johannesburg',
-  'Kiev',
-  'Las Vegas',
-  'Leipzig',
-  'Lisbon',
-  'London',
-  'Los Angeles',
-  'Madrid',
-  'Monaco',
-  'Montreal',
-  'Moscow',
-  'Saint Petersburg',
-  'Vladimir',
-  'Suzdal'
+  'Oslo',
+  'Kopenhagen'
 ];
 
 function getRandomValue(set) {
@@ -74,8 +56,8 @@ function createPoint() {
 
   return {
     basePrice: getRandomInteger(500, 5000),
-    dateFrom: Math.min(...dates),
-    dateTo: Math.max(...dates),
+    dateFrom: dates[0],
+    dateTo: dates[1],
     destination: generateDestination(),
     id: getId(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
