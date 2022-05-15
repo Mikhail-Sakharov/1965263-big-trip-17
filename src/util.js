@@ -6,11 +6,9 @@ const PointsIdCount = {
 };
 const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
-const DATE_FORMAT = 'YYYY-MM-DD';
-const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
 
-function humanizePointDueDate(date) {
-  return dayjs(date).format('DD MMM');
+function humanizePointDueDate(date, format) {
+  return dayjs(date).format(format);
 }
 
 function returnTitleDuration(startDate, endDate) {
@@ -32,36 +30,35 @@ function duration(dateFrom, dateTo) {
   const restHours = Math.floor((difference - days * TOTAL_DAY_MINUTES_COUNT)/HOUR_MINUTES_COUNT);
   const restMinutes = difference - (days * TOTAL_DAY_MINUTES_COUNT + restHours * HOUR_MINUTES_COUNT);
 
-  const daysOutput = (days) ? `${days}D` : '';
-  const hoursOutput = (restHours) ? `${restHours}H` : '';
-  const minutesOutput = (restMinutes) ? `${restMinutes}M` : '';
+  const daysOutput = (days) ? `${days < 10 ? `0${days}` : `${days}`}D` : '';
+  const hoursOutput = (restHours) ? `${restHours < 10 ? `0${restHours}` : `${restHours}`}H` : '';
+  const minutesOutput = (restMinutes) ? `${restMinutes < 10 ? `0${restMinutes}` : `${restMinutes}`}M` : '';
 
   return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
 }
 
-function getDate(date) {
-  return dayjs(date).format(DATE_FORMAT);
-}
-
-function getDateTime(date) {
-  return dayjs(date).format(DATE_TIME_FORMAT);
-}
-
-function getRandom (from, to) {
-  const min = Math.min(Math.abs(from), Math.abs(to));
-  const max = Math.max(Math.abs(from), Math.abs(to));
+function getRandomInteger(from, to) {
+  const min = Math.min(from, to);
+  const max = Math.max(from, to);
   return Math.round(min + (max - min) * Math.random());
+}
+
+function generateDate() {
+  const MAX_GAP = 1000;
+  const minutesGap = getRandomInteger(-MAX_GAP, MAX_GAP);
+
+  return dayjs().add(minutesGap, 'minute').toDate();
 }
 
 const pointsId = [];              // массив для хранения уникальных id для комментариев
 function getId() {
-  let id = getRandom(PointsIdCount.MIN, PointsIdCount.MAX);
+  let id = getRandomInteger(PointsIdCount.MIN, PointsIdCount.MAX);
   while (pointsId.some((item) => item === id)) {
-    id = getRandom(PointsIdCount.MIN, PointsIdCount.MAX);
+    id = getRandomInteger(PointsIdCount.MIN, PointsIdCount.MAX);
   }
 
   pointsId.push(id);
   return id;
 }
 
-export {getRandom, getId, humanizePointDueDate, returnTitleDuration, duration, getDate, getDateTime};
+export {getRandomInteger, getId, humanizePointDueDate, returnTitleDuration, duration, generateDate};

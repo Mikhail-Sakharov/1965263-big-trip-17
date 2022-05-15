@@ -1,4 +1,4 @@
-import {getRandom, getId} from '../util.js';
+import {getRandomInteger, getId, generateDate} from '../util.js';
 
 const POINT_TYPES = [
   'taxi',
@@ -41,12 +41,12 @@ const DESTINATION_NAMES = [
 function getRandomValue(set) {
   const MIN = 0;
   const max = set.length - 1;
-  return set[getRandom(MIN, max)];
+  return set[getRandomInteger(MIN, max)];
 }
 
 function createPictures(destinationName) {
-  return Array.from({length: getRandom(1, 5)}, () => ({
-    src: `http://picsum.photos/248/152?r=${getRandom(1, 100)}`,
+  return Array.from({length: getRandomInteger(1, 5)}, () => ({
+    src: `http://picsum.photos/248/152?r=${getRandomInteger(1, 100)}`,
     description: `${destinationName} parliament building`
   }));
 }
@@ -61,7 +61,7 @@ function generateDestination() {
 }
 
 function createOffers() {
-  const randomArray = Array.from({length: getRandom(1, 3)}, () => getRandom(1, 3));
+  const randomArray = Array.from({length: getRandomInteger(1, 3)}, () => getRandomInteger(1, 3));
   const set = new Set(randomArray);
   return Array.from(set);
 }
@@ -70,14 +70,15 @@ function createPoint() {
   const TYPES_WITHOUT_OFFERS = ['bus', 'train', 'ship'];
   const type = getRandomValue(POINT_TYPES);
   const offers = TYPES_WITHOUT_OFFERS.includes(type) ? [] : createOffers();
+  const dates = [generateDate(), generateDate()];
 
   return {
-    basePrice: getRandom(500, 5000),
-    dateFrom: '2019-07-01T13:00:56.845Z',
-    dateTo: '2019-07-09T14:30:56.845Z',
+    basePrice: getRandomInteger(500, 5000),
+    dateFrom: Math.min(...dates),
+    dateTo: Math.max(...dates),
     destination: generateDestination(),
     id: getId(),
-    isFavorite: Boolean(getRandom(0, 1)),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
     offers,
     type
   };

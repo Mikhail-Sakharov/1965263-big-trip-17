@@ -1,5 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {getDateTime} from '../util.js';
+import {humanizePointDueDate} from '../util.js';
+
+const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
 
 function renderDestinationPictures(pictures, description) {
   let result = '';
@@ -48,8 +50,8 @@ function createEditPointTemplate(point, allOffers) {
   const {type, destination, basePrice, dateFrom, dateTo, offers} = point;
 
   const destinationName = destination.pointName !== null ? destination.pointName : '';
-  const startDate = dateFrom !== null ? getDateTime(dateFrom) : '';
-  const endDate = dateTo !== null ? getDateTime(dateTo) : '';
+  const startDate = dateFrom !== null ? humanizePointDueDate(dateFrom, DATE_TIME_FORMAT) : '';
+  const endDate = dateTo !== null ? humanizePointDueDate(dateTo, DATE_TIME_FORMAT) : '';
   const price = basePrice !== null ? basePrice : '';
   const eventType = type !== null ? type : 'flight';
 
