@@ -23,7 +23,7 @@ function renderOffers(checkedOffers, allOffers) {
 function createPointTemplate(point, allOffers) {
   const {type, destination, basePrice, isFavorite, dateFrom, dateTo, offers} = point;
 
-  const destinationName = destination.pointName !== null ? destination.pointName : '';
+  const destinationName = destination.name !== null ? destination.name : '';
   const eventDate = dateFrom !== null ? humanizePointDueDate(dateFrom, HUMAN_FORMAT) : '';
   const startDate = dateFrom !== null ? humanizePointDueDate(dateFrom, TIME_FORMAT) : '';
   const endDate = dateTo !== null ? humanizePointDueDate(dateTo, TIME_FORMAT) : '';

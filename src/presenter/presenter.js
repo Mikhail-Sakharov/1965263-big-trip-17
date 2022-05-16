@@ -20,7 +20,7 @@ export default class ListPresenter {
       render(new EmptyListView(filterValue), this.listContainer, RenderPosition.AFTERBEGIN);
     } else {
       render(this.#listComponent, this.listContainer, RenderPosition.AFTERBEGIN);
-      render(new SortView(), this.#listComponent.element, RenderPosition.AFTERBEGIN);
+      render(new SortView(points), this.#listComponent.element, RenderPosition.AFTERBEGIN);
       points.forEach((point) => {
         const specifiedTypeOffers = OFFERS.find((offer) => offer.type === point.type).offers;
         this.#renderPoint(point, specifiedTypeOffers, DESTINATIONS);

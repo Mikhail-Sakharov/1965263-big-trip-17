@@ -53,7 +53,7 @@ function renderOffers(eventType, checkedOffers, allOffers) {
 function createEditPointTemplate(point, allOffers, destinations) {
   const {type, destination, basePrice, dateFrom, dateTo, offers, id} = point;
 
-  const destinationName = destination.pointName !== null ? destination.pointName : '';
+  const destinationName = destination.name !== null ? destination.name : '';
   const startDate = dateFrom !== null ? humanizePointDueDate(dateFrom, DATE_TIME_FORMAT) : '';
   const endDate = dateTo !== null ? humanizePointDueDate(dateTo, DATE_TIME_FORMAT) : '';
   const price = basePrice !== null ? basePrice : '';

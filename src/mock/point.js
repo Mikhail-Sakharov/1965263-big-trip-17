@@ -1,4 +1,6 @@
 import {getRandomInteger, getId, generateDate} from '../util.js';
+import dayjs from 'dayjs';
+import {DESTINATIONS} from './destinations.js';
 
 const POINT_TYPES = [
   'taxi',
@@ -12,34 +14,10 @@ const POINT_TYPES = [
   'restaurant'
 ];
 
-const DESTINATION_NAMES = [
-  'Geneva',
-  'Amsterdam',
-  'Helsinki',
-  'Oslo',
-  'Kopenhagen'
-];
-
 function getRandomValue(set) {
   const MIN = 0;
   const max = set.length - 1;
   return set[getRandomInteger(MIN, max)];
-}
-
-function createPictures(destinationName) {
-  return Array.from({length: getRandomInteger(1, 5)}, () => ({
-    src: `http://picsum.photos/248/152?r=${getRandomInteger(1, 100)}`,
-    description: `${destinationName} parliament building`
-  }));
-}
-
-function generateDestination() {
-  const destinationName = getRandomValue(DESTINATION_NAMES);
-  return {
-    pointName: destinationName,
-    description: `${destinationName}, is a beautiful city.`,
-    pictures: createPictures(destinationName)
-  };
 }
 
 function createOffers() {
@@ -52,13 +30,14 @@ function createPoint() {
   const TYPES_WITHOUT_OFFERS = ['bus', 'train', 'ship'];
   const type = getRandomValue(POINT_TYPES);
   const offers = TYPES_WITHOUT_OFFERS.includes(type) ? [] : createOffers();
-  const dates = [generateDate(), generateDate()];
+  const dateFrom = generateDate();
+  const dateTo = dayjs(dateFrom).add(getRandomInteger(30, 1000), 'minute').toISOString();
 
   return {
     basePrice: getRandomInteger(500, 5000),
-    dateFrom: dates[0],
-    dateTo: dates[1],
-    destination: generateDestination(),
+    dateFrom,
+    dateTo,
+    destination: getRandomValue(DESTINATIONS),
     id: getId(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
     offers,
