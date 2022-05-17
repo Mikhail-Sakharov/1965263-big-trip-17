@@ -5,13 +5,12 @@ const HUMAN_FORMAT = 'MMM DD';
 const DATE_FORMAT = 'YYYY-MM-DD';
 const TIME_FORMAT = 'hh:mm';
 
-function renderOffers(checkedOffers, allOffers) {
+function renderOffers(checkedOffersIds, allOffers) {
   let result = '';
-  checkedOffers.forEach((checkedOffer) => {
-    const offerTitle = allOffers.find((offer) => offer.id === checkedOffer).title;
-    const offerPrice = allOffers.find((offer) => offer.id === checkedOffer).price;
+  checkedOffersIds.forEach((checkedOfferId) => {
+    const {title, price} = allOffers.find((offer) => offer.id === checkedOfferId);
     result = `${result  }
-                      <li class="event__offer"><span class="event__offer-title">${offerTitle}<span>&plus;&euro;&nbsp;<span class="event__offer-price">${offerPrice}</span></li>`;
+                      <li class="event__offer"><span class="event__offer-title">${title}<span>&plus;&euro;&nbsp;<span class="event__offer-price">${price}</span></li>`;
   });
   result = `<h4 class="visually-hidden">Offers:</h4>
                   <ul class="event__selected-offers">

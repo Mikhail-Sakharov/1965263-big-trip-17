@@ -16,7 +16,9 @@ export default class ListPresenter {
 
     if (!points || points.length === 0) {
       const filters = new FiltersView();
-      const filterValue = filters.element.querySelector('input[name="trip-filter"]:checked').value;
+      const checkedFilter = filters.element.querySelector('input[name="trip-filter"]:checked');
+      const isChecked = !!(checkedFilter);
+      const filterValue = isChecked ? checkedFilter.value : 'everything';
       render(new EmptyListView(filterValue), this.listContainer, RenderPosition.AFTERBEGIN);
     } else {
       render(this.#listComponent, this.listContainer, RenderPosition.AFTERBEGIN);

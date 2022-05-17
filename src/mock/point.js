@@ -15,9 +15,8 @@ const POINT_TYPES = [
 ];
 
 function getRandomValue(set) {
-  const MIN = 0;
   const max = set.length - 1;
-  return set[getRandomInteger(MIN, max)];
+  return set[getRandomInteger(0, max)];
 }
 
 function createOffers() {

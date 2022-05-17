@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 
-const PointsIdCount = {
+const PointsCount = {
   MIN: 1,
-  MAX: 100
+  MAX: 25
 };
 const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
@@ -44,7 +44,7 @@ function getRandomInteger(from, to) {
 }
 
 function generateDate() {
-  const MAX_GAP = 1000;
+  const MAX_GAP = 3000;
   const minutesGap = getRandomInteger(-MAX_GAP, MAX_GAP);
 
   return dayjs().add(minutesGap, 'minute').toISOString();
@@ -52,13 +52,13 @@ function generateDate() {
 
 const pointsId = [];              // массив для хранения уникальных id для комментариев
 function getId() {
-  let id = getRandomInteger(PointsIdCount.MIN, PointsIdCount.MAX);
+  let id = getRandomInteger(PointsCount.MIN, PointsCount.MAX);
   while (pointsId.some((item) => item === id)) {
-    id = getRandomInteger(PointsIdCount.MIN, PointsIdCount.MAX);
+    id = getRandomInteger(PointsCount.MIN, PointsCount.MAX);
   }
 
   pointsId.push(id);
   return id;
 }
 
-export {getRandomInteger, getId, humanizePointDueDate, returnTitleDuration, duration, generateDate};
+export {getRandomInteger, getId, humanizePointDueDate, returnTitleDuration, duration, generateDate, PointsCount};
