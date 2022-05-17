@@ -4,8 +4,9 @@ import ListView from '../view/list-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import EmptyListView from '../view/empty-list-msg.js';
 import PointView from '../view/point-view.js';
-
 import FiltersView from '../view/filters-view.js';
+import {OFFERS} from '../mock/offers.js';
+import {DESTINATIONS} from '../mock/destinations.js';
 
 export default class ListPresenter {
   #listComponent = new ListView();
@@ -15,28 +16,29 @@ export default class ListPresenter {
 
     if (!points || points.length === 0) {
       const filters = new FiltersView();
-      const filterValue = filters.element.querySelector('input[name="trip-filter"]:checked').value;
+      const checkedFilter = filters.element.querySelector('input[name="trip-filter"]:checked');
+      const isChecked = !!(checkedFilter);
+      const filterValue = isChecked ? checkedFilter.value : 'everything';
       render(new EmptyListView(filterValue), this.listContainer, RenderPosition.AFTERBEGIN);
     } else {
       render(this.#listComponent, this.listContainer, RenderPosition.AFTERBEGIN);
-      render(new SortView(), this.#listComponent.element, RenderPosition.AFTERBEGIN);
-      points.forEach((item) => {
-        this.#renderPoint(item);
+      render(new SortView(points), this.#listComponent.element, RenderPosition.AFTERBEGIN);
+      points.forEach((point) => {
+        const specifiedTypeOffers = OFFERS.find((offer) => offer.type === point.type).offers;
+        this.#renderPoint(point, specifiedTypeOffers, DESTINATIONS);
       });
     }
   };
 
-  #renderPoint = (point) => {
-    const pointComponent = new PointView(point);
-    const editPointComponent = new EditPointView(point);
+  #renderPoint = (point, offers, destinations) => {
+    const pointComponent = new PointView(point, offers);
+    const editPointComponent = new EditPointView(point, offers, destinations);
 
     const replacePointToForm = () => {
-      //this.#listComponent.element.replaceChild(editPointComponent.element, pointComponent.element);
       replace(editPointComponent, pointComponent);
     };
 
     const replaceFormToPoint = () => {
-      //this.#listComponent.element.replaceChild(pointComponent.element, editPointComponent.element);
       replace(pointComponent, editPointComponent);
     };
 

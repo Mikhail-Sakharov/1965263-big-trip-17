@@ -11,14 +11,14 @@ function createTitleTemplate(filterValue) {
 }
 
 export default class EmptyListView extends AbstractView {
-  #element = null;
+  #filterValue = null;
 
   constructor(filterValue) {
     super();
-    this.filterValue = filterValue;
+    this.#filterValue = filterValue;
   }
 
   get template() {
-    return createTitleTemplate(this.filterValue);
+    return createTitleTemplate(this.#filterValue);
   }
 }

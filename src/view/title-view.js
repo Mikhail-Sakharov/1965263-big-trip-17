@@ -21,16 +21,18 @@ function createTitleTemplate(destinationNames, totalPrice, duration) {
 }
 
 export default class TitleView extends AbstractView {
-  #element = null;
+  #destinationNames = null;
+  #pointsTotalPrice = null;
+  #titleDuration = null;
 
   constructor(destinationNames, pointsTotalPrice, titleDuration) {
     super();
-    this.destinationNames = destinationNames;
-    this.pointsTotalPrice = pointsTotalPrice;
-    this.titleDuration = titleDuration;
+    this.#destinationNames = destinationNames;
+    this.#pointsTotalPrice = pointsTotalPrice;
+    this.#titleDuration = titleDuration;
   }
 
   get template() {
-    return createTitleTemplate(this.destinationNames, this.pointsTotalPrice, this.titleDuration);
+    return createTitleTemplate(this.#destinationNames, this.#pointsTotalPrice, this.#titleDuration);
   }
 }

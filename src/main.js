@@ -8,7 +8,7 @@ import {returnTitleDuration} from './util.js';
 
 const pointsArray = new PointModel();
 const points = pointsArray.points;
-const destinationNames = points.map((point) => point.destination.pointName);
+const destinationNames = points.map((point) => point.destination.name);
 const titleContainer = document.querySelector('.trip-main');
 const filtersContainerElement = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = document.querySelector('.trip-events');
@@ -28,6 +28,6 @@ if (points && points.length !== 0) {
 
   render(new TitleView(destinationNames, totalPrice, titleDuration), titleContainer, RenderPosition.AFTERBEGIN);
 }
-render(new FiltersView(), filtersContainerElement, RenderPosition.BEFOREEND);
+render(new FiltersView(points), filtersContainerElement, RenderPosition.BEFOREEND);
 
 listPresenter.init(tripEventsContainer, points);

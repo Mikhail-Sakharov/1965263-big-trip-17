@@ -1,34 +1,31 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizePointDueDate, duration, getDate} from '../util.js';
-import {OFFERS} from '../mock/offers.js';
+import {humanizePointDueDate, duration} from '../util.js';
 
-function renderOffers(eventType, checkedOffers) {
+const HUMAN_FORMAT = 'MMM DD';
+const DATE_FORMAT = 'YYYY-MM-DD';
+const TIME_FORMAT = 'hh:mm';
+
+function renderOffers(checkedOffersIds, allOffers) {
   let result = '';
-  OFFERS.forEach((item) => {
-    if (item.type === eventType) {
-      if (checkedOffers !== null && item.offers !== null) {
-        item.offers.forEach((elem) => {
-          if (checkedOffers.includes(elem.id)) {
-            result = `${result  }            
-                      <li class="event__offer"><span class="event__offer-title">${elem.title}<span>&plus;&euro;&nbsp;<span class="event__offer-price">${elem.price}</span></li>`;
-          }
-        });
-        result = `<h4 class="visually-hidden">Offers:</h4>
+  checkedOffersIds.forEach((checkedOfferId) => {
+    const {title, price} = allOffers.find((offer) => offer.id === checkedOfferId);
+    result = `${result  }
+                      <li class="event__offer"><span class="event__offer-title">${title}<span>&plus;&euro;&nbsp;<span class="event__offer-price">${price}</span></li>`;
+  });
+  result = `<h4 class="visually-hidden">Offers:</h4>
                   <ul class="event__selected-offers">
                     ${result}
                   </ul>`;
-      } else {result = '';}
-    }
-  });
   return result;
 }
 
-function createPointTemplate(point) {
+function createPointTemplate(point, allOffers) {
   const {type, destination, basePrice, isFavorite, dateFrom, dateTo, offers} = point;
 
-  const destinationName = destination.pointName !== null ? destination.pointName : '';
-  const startDate = dateFrom !== null ? humanizePointDueDate(dateFrom) : '';
-  const endDate = dateTo !== null ? humanizePointDueDate(dateTo) : '';
+  const destinationName = destination.name !== null ? destination.name : '';
+  const eventDate = dateFrom !== null ? humanizePointDueDate(dateFrom, HUMAN_FORMAT) : '';
+  const startDate = dateFrom !== null ? humanizePointDueDate(dateFrom, TIME_FORMAT) : '';
+  const endDate = dateTo !== null ? humanizePointDueDate(dateTo, TIME_FORMAT) : '';
   const price = basePrice !== null ? basePrice : '';
   const eventType = type !== null ? type : 'flight';
   const eventDuration = duration(dateFrom, dateTo);
@@ -37,7 +34,7 @@ function createPointTemplate(point) {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${getDate(dateFrom)}">${startDate}</time>
+        <time class="event__date" datetime="${humanizePointDueDate(dateFrom, DATE_FORMAT)}">${eventDate}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType}.png" alt="Event type icon">
         </div>
@@ -53,7 +50,7 @@ function createPointTemplate(point) {
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>        
-          ${renderOffers(eventType, offers)}        
+          ${renderOffers(offers, allOffers)}        
         <button class="event__favorite-btn ${activeFavoriteButtonClass}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -69,15 +66,17 @@ function createPointTemplate(point) {
 }
 
 export default class PointView extends AbstractView {
-  #element = null;
+  #point = null;
+  #offers = null;
 
-  constructor(point) {
+  constructor(point, offers) {
     super();
-    this.point = point;
+    this.#point = point;
+    this.#offers = offers;
   }
 
   get template() {
-    return createPointTemplate(this.point);
+    return createPointTemplate(this.#point, this.#offers);
   }
 
   setEditClickHandler = (callback) => {
