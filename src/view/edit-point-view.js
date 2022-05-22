@@ -31,14 +31,16 @@ function renderDestinationPictures(pictures, description) {
     pictures.forEach((item) => {
       result = `${result  }<img class="event__photo" src="${item.src}" alt="Event photo">`;
     });
-    result = `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                <p class="event__destination-description">${description !== null ? description : ''}</p>
-                <div class="event__photos-container">
-                  <div class="event__photos-tape">
-                    ${result}
+    result = `<section class="event__section  event__section--destination">
+                <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+                  <p class="event__destination-description">${description !== null ? description : ''}</p>
+                  <div class="event__photos-container">
+                    <div class="event__photos-tape">
+                      ${result}
+                    </div>
                   </div>
-                </div>`;
-  } else {result = '';}
+                </section>`;
+  }
   return result;
 }
 
@@ -50,7 +52,7 @@ function renderOffers(eventType, checkedOffers, allOffers) {
       const offerPrice = offer.price;
       const checked = checkedOffers.includes(offer.id) ? 'checked' : '';
       const label = `${eventType}-${offer.id}`;
-      result = `${result  }
+      result = `${result  }                
                   <div class="event__offer-selector">
                     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${label}"   type="checkbox" name="event-offer-${label}" ${checked}>
                     <label class="event__offer-label" for="event-offer-${label}">
@@ -60,11 +62,13 @@ function renderOffers(eventType, checkedOffers, allOffers) {
                     </label>
                   </div>`;
     });
-  }
-  result = `<h3 class="event__section-title  event__section-title--offers">Offers</h3> 
+    result = `<section class="event__section  event__section--offers">
+                <h3 class="event__section-title  event__section-title--offers">Offers</h3> 
                   <div class="event__available-offers">
                     ${result}
-                  </div>`;
+                  </div>
+              </section>`;
+  }
   return result;
 }
 
@@ -122,13 +126,11 @@ function createEditPointTemplate(point, allOffers, destinations) {
                    <span class="visually-hidden">Open event</span>
                  </button>
                </header>
-               <section class="event__details">
-                 <section class="event__section  event__section--offers">
-                   ${renderOffers(eventType, offers, allOffers)}                   
-                 </section> 
-                 <section class="event__section  event__section--destination">
+               <section class="event__details">                 
+                   ${renderOffers(eventType, offers, allOffers)}
+                 
                    ${renderDestinationPictures(destination.pictures, destination.description)}
-                 </section>
+                 
                </section>
              </form>
            </li>`);
