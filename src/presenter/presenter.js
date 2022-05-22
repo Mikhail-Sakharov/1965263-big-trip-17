@@ -11,23 +11,20 @@ import {DESTINATIONS} from '../mock/destinations.js';
 export default class ListPresenter {
   #listComponent = new ListView();
 
-  init = (listContainer, points) => {
-    this.listContainer = listContainer;
+  #renderEmptyList = () => {
+    const filters = new FiltersView();
+    const checkedFilter = filters.element.querySelector('input[name="trip-filter"]:checked');
+    const isChecked = !!(checkedFilter);
+    const filterValue = isChecked ? checkedFilter.value : 'everything';
+    render(new EmptyListView(filterValue), this.listContainer, RenderPosition.AFTERBEGIN);
+  };
 
-    if (!points || points.length === 0) {
-      const filters = new FiltersView();
-      const checkedFilter = filters.element.querySelector('input[name="trip-filter"]:checked');
-      const isChecked = !!(checkedFilter);
-      const filterValue = isChecked ? checkedFilter.value : 'everything';
-      render(new EmptyListView(filterValue), this.listContainer, RenderPosition.AFTERBEGIN);
-    } else {
-      render(this.#listComponent, this.listContainer, RenderPosition.AFTERBEGIN);
-      render(new SortView(points), this.#listComponent.element, RenderPosition.AFTERBEGIN);
-      points.forEach((point) => {
-        const specifiedTypeOffers = OFFERS.find((offer) => offer.type === point.type).offers;
-        this.#renderPoint(point, specifiedTypeOffers, DESTINATIONS);
-      });
-    }
+  #renderList = () => {
+    render(this.#listComponent, this.listContainer, RenderPosition.AFTERBEGIN);
+  };
+
+  #renderSort = (points) => {
+    render(new SortView(points), this.#listComponent.element, RenderPosition.AFTERBEGIN);
   };
 
   #renderPoint = (point, offers, destinations) => {
@@ -66,5 +63,20 @@ export default class ListPresenter {
     });
 
     render(pointComponent, this.#listComponent.element);
+  };
+
+  init = (listContainer, points) => {
+    this.listContainer = listContainer;
+
+    if (!points || points.length === 0) {
+      this.#renderEmptyList();
+    } else {
+      this.#renderList();
+      this.#renderSort(points);
+      points.forEach((point) => {
+        const specifiedTypeOffers = OFFERS.find((offer) => offer.type === point.type).offers;
+        this.#renderPoint(point, specifiedTypeOffers, DESTINATIONS);
+      });
+    }
   };
 }
