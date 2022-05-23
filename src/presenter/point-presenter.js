@@ -1,6 +1,6 @@
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
-import {render, replace} from '../framework/render.js';
+import {render, replace, remove} from '../framework/render.js';
 
 export default class PointPresenter {
   #listComponent = null;
@@ -21,6 +21,9 @@ export default class PointPresenter {
     this.#offers = offers;
     this.#destinations = destinations;
 
+    const prevPointComponent = this.#pointComponent;
+    const prevEditPointComponent = this.#editPointComponent;
+
     this.#pointComponent = new PointView(this.#point, this.#offers);
     this.#editPointComponent = new EditPointView(this.#point, this.#offers, this.#destinations);
 
@@ -31,7 +34,26 @@ export default class PointPresenter {
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     });
 
-    render(this.#pointComponent, this.#listComponent);
+    if (prevPointComponent === null || prevEditPointComponent === null) {
+      render(this.#pointComponent, this.#listComponent);
+      return;
+    }
+
+    if (this.#listComponent.contains(prevPointComponent.element)) {
+      replace(this.#pointComponent, prevPointComponent);
+    }
+
+    if (this.#listComponent.contains(prevEditPointComponent.element)) {
+      replace(this.#editPointComponent, prevEditPointComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevEditPointComponent);
+  };
+
+  destroy = () => {
+    remove(this.#pointComponent);
+    remove(this.#editPointComponent);
   };
 
   #escKeyDownHandler = (evt) => {
