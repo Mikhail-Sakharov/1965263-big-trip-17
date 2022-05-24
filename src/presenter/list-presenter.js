@@ -52,8 +52,9 @@ export default class ListPresenter {
   };
 
   #handlePointChange = (updatedPoint) => {
+    const specifiedTypeOffers = OFFERS.find((offer) => offer.type === updatedPoint.type).offers;
     this.#listPoints = updateItem(this.#listPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, specifiedTypeOffers, DESTINATIONS);
   };
 
   #renderEmptyList = () => {
@@ -79,10 +80,8 @@ export default class ListPresenter {
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
-  #renderPoints = () => {
-    this.#listPoints
-      .slice()
-      .forEach((point) => this.#renderPoint(point));
+  #renderPoints = (points) => {
+    points.forEach((point) => this.#renderPoint(point));
   };
 
   #clearPointList = () => {
