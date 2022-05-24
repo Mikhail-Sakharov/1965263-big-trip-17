@@ -11,12 +11,26 @@ function humanizePointDueDate(date, format) {
   return dayjs(date).format(format);
 }
 
-function returnTitleDuration(startDate, endDate) {
-  const startDateMonth = dayjs(startDate).format('MMM');
-  const endDateMonth = dayjs(endDate).format('MMM');
+function calculatePrice(pointsData, allOffers) {
+  const eventsTotalPrice = pointsData.reduce((totalPrice, point) => totalPrice + point.basePrice + (
+    point.offers.reduce((offersTotalPrice, offerId) => offersTotalPrice + allOffers.find((offersBlock) => offersBlock.type === point.type).offers.find((offer) => offer.id === offerId).price, 0)
+  ), 0);
 
-  const startDateDay = dayjs(startDate).format('DD');
-  const endDateDay = dayjs(endDate).format('DD');
+  return eventsTotalPrice;
+}
+
+function returnTitleDuration(points) {
+  const startDates = points.map((point) => point.dateFrom);
+  const sortedStartDates = startDates.sort((nextItem, currentItem) => new Date(nextItem) - new Date(currentItem));
+
+  const endDates = points.map((point) => point.dateTo);
+  const sortedEndDates = endDates.sort((nextItem, currentItem) => new Date(currentItem) - new Date(nextItem));
+
+  const startDateMonth = dayjs(sortedStartDates[0]).format('MMM');
+  const endDateMonth = dayjs(sortedEndDates[0]).format('MMM');
+
+  const startDateDay = dayjs(sortedStartDates[0]).format('DD');
+  const endDateDay = dayjs(sortedEndDates[0]).format('DD');
 
   return startDateMonth === endDateMonth ? `${startDateMonth} ${startDateDay} - ${endDateDay}` : `${startDateMonth} ${startDateDay} - ${endDateMonth} ${endDateDay}`;
 }
@@ -61,4 +75,4 @@ function getId() {
   return id;
 }
 
-export {getRandomInteger, getId, humanizePointDueDate, returnTitleDuration, duration, generateDate, PointsCount};
+export {getRandomInteger, getId, humanizePointDueDate, calculatePrice, returnTitleDuration, duration, generateDate, PointsCount};
