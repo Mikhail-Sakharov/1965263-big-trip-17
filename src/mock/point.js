@@ -1,5 +1,6 @@
-import {getRandomInteger, getId, generateDate} from '../util.js';
+import {getRandomInteger, generateDate} from '../util.js';
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import {DESTINATIONS} from './destinations.js';
 
 const POINT_TYPES = [
@@ -37,7 +38,7 @@ function createPoint() {
     dateFrom,
     dateTo,
     destination: getRandomValue(DESTINATIONS),
-    id: getId(),
+    id: nanoid(),
     isFavorite: Boolean(getRandomInteger(0, 1)),
     offers,
     type

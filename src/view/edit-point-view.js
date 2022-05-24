@@ -13,6 +13,16 @@ const FEATURES = [
   'sightseeing',
   'restaurant'
 ];
+const BLANK_POINT = {
+  basePrice: '',
+  dateFrom: '',
+  dateTo: '',
+  destination: null,
+  id: '',
+  isFavorite: false,
+  offers: null,
+  type: ''
+};
 
 function getFeatureTemplate(features, id) {
   return features.map((feature) => `<div class="event__type-item">
@@ -141,7 +151,7 @@ export default class EditPointView extends AbstractView {
   #offers = null;
   #destinations = null;
 
-  constructor(point, offers, destinations) {
+  constructor(point = BLANK_POINT, offers, destinations) {
     super();
     this.#point = point;
     this.#offers = offers;
@@ -159,6 +169,6 @@ export default class EditPointView extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this.#point);
   };
 }

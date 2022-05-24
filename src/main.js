@@ -1,7 +1,7 @@
 import {render, RenderPosition} from './framework/render.js';
 import TitleView from './view/title-view.js';
 import FiltersView from './view/filters-view.js';
-import ListPresenter from './presenter/presenter.js';
+import ListPresenter from './presenter/list-presenter.js';
 import PointModel from './model/point-model.js';
 import {OFFERS} from './mock/offers.js';
 import {returnTitleDuration, calculatePrice} from './util.js';
@@ -15,7 +15,7 @@ const titleContainerElement = document.querySelector('.trip-main');
 const filtersContainerElement = document.querySelector('.trip-controls__filters');
 const tripEventsContainerElement = document.querySelector('.trip-events');
 
-const listPresenter = new ListPresenter();
+const listPresenter = new ListPresenter(tripEventsContainerElement, pointsArray);
 
 if (points && points.length !== 0) {
   const totalPrice = calculatePrice(points, OFFERS);
@@ -25,4 +25,4 @@ if (points && points.length !== 0) {
 }
 render(new FiltersView(points), filtersContainerElement, RenderPosition.BEFOREEND);
 
-listPresenter.init(tripEventsContainerElement, points);
+listPresenter.init();
