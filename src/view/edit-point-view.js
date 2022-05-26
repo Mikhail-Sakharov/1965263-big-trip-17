@@ -14,14 +14,14 @@ const FEATURES = [
   'restaurant'
 ];
 const BLANK_POINT = {
-  basePrice: '',
-  dateFrom: '',
-  dateTo: '',
+  basePrice: null,
+  dateFrom: null,
+  dateTo: null,
   destination: null,
-  id: '',
+  id: null,
   isFavorite: false,
-  offers: null,
-  type: ''
+  offers: [],
+  type: null
 };
 
 function getFeatureTemplate(features, id) {

@@ -6,6 +6,7 @@ import FiltersView from '../view/filters-view.js';
 import {OFFERS} from '../mock/offers.js';
 import {DESTINATIONS} from '../mock/destinations.js';
 import PointPresenter from './point-presenter.js';
+import {SortType} from '../view/sort-view.js';
 
 const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
@@ -24,19 +25,26 @@ const updateItem = (items, update) => {
 export default class ListPresenter {
   #listContainer = null;
   #listComponent = new ListView();
-  #pointModel = null;
+  #sortComponent = new SortView();
+  #pointsModel = null;
 
   #pointPresenter = new Map();
 
   #listPoints = [];
 
-  constructor(listContainer, tasksModel) {
+  #currentSortType = SortType.DEFAULT;
+  #sourcedBoardPoints = [];
+
+  constructor(listContainer, pointsModel) {
     this.#listContainer = listContainer;
-    this.#pointModel = tasksModel;
+    this.#pointsModel = pointsModel;
   }
 
   init = () => {
-    this.#listPoints = [...this.#pointModel.points];
+    this.#listPoints = [...this.#pointsModel.points];
+    this.#listPoints.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom));
+    this.#sourcedBoardPoints = [...this.#pointsModel.points];
+    this.#sourcedBoardPoints.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom));
 
     if (!this.#listPoints || this.#listPoints.length === 0) {
       this.#renderEmptyList();
@@ -54,7 +62,34 @@ export default class ListPresenter {
   #handlePointChange = (updatedPoint) => {
     const specifiedTypeOffers = OFFERS.find((offer) => offer.type === updatedPoint.type).offers;
     this.#listPoints = updateItem(this.#listPoints, updatedPoint);
+    this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, specifiedTypeOffers, DESTINATIONS);
+  };
+
+  #sortPoints = (sortType) => {
+    switch (sortType) {
+      case SortType.TIME_DOWN:
+        this.#listPoints.sort((nextItem, currentItem) => (new Date(currentItem.dateTo) - new Date(currentItem.dateFrom)) - (new Date(nextItem.dateTo) - new Date(nextItem.dateFrom)));
+        break;
+      case SortType.PRICE_DOWN:
+        this.#listPoints.sort((nextItem, currentItem) => currentItem.basePrice - nextItem.basePrice);
+        break;
+      default:
+        this.#listPoints = [...this.#sourcedBoardPoints];
+    }
+
+    this.#currentSortType = sortType;
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType);
+
+    this.#clearPointList();
+    this.#renderPoints(this.#listPoints);
   };
 
   #renderEmptyList = () => {
@@ -69,8 +104,9 @@ export default class ListPresenter {
     render(this.#listComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
   };
 
-  #renderSort = (points) => {
-    render(new SortView(points), this.#listComponent.element, RenderPosition.AFTERBEGIN);
+  #renderSort = () => {
+    render(this.#sortComponent, this.#listComponent.element, RenderPosition.AFTERBEGIN);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderPoint = (point) => {
@@ -81,7 +117,9 @@ export default class ListPresenter {
   };
 
   #renderPoints = (points) => {
+    //points.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom));
     points.forEach((point) => this.#renderPoint(point));
+    //console.log(points);
   };
 
   #clearPointList = () => {
