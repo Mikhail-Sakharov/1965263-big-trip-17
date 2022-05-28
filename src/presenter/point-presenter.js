@@ -41,10 +41,7 @@ export default class PointPresenter {
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#editPointComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#editPointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      this.#replaceFormToPoint();
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
-    });
+    this.#editPointComponent.setRollUpButtonClickHandler(this.#handleRollUpButtonClick);
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
       render(this.#pointComponent, this.#listComponent);
@@ -104,6 +101,11 @@ export default class PointPresenter {
 
   #handleFormSubmit = (point) => {
     this.#changeData(point);
+    this.#replaceFormToPoint();
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  #handleRollUpButtonClick = () => {
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };

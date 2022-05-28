@@ -32,5 +32,15 @@ export const DESTINATIONS = [
     name: 'Kopenhagen',
     description: 'Kopenhagen, full of of cozy canteens where you can try the best coffee in the Middle East.',
     pictures: createPictures('Kopenhagen')
+  },
+  {
+    name: 'Dublin',
+    description: null,
+    pictures: null
+  },
+  {
+    name: 'Leipzig',
+    description: null,
+    pictures: null
   }
 ];

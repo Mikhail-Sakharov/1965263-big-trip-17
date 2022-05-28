@@ -117,9 +117,7 @@ export default class ListPresenter {
   };
 
   #renderPoints = (points) => {
-    //points.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom));
     points.forEach((point) => this.#renderPoint(point));
-    //console.log(points);
   };
 
   #clearPointList = () => {

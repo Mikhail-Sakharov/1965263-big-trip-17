@@ -3,8 +3,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 const DESTINATION_NAMES_MAX_COUNT = 3;
 
 function createTitleTemplate(destinationNames, totalPrice, duration) {
-  const set = new Set(destinationNames);
-  const names = Array.from(set);
+  const names = Array.from(destinationNames);
   const title = names.length <= DESTINATION_NAMES_MAX_COUNT ? names.join('-') : `${names[0]} — ... — ${names[names.length - 1]}`;
 
   return `<section class="trip-main__trip-info  trip-info">
