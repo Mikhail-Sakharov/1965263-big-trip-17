@@ -86,14 +86,14 @@ function createEditPointTemplate(state, allOffers, destinations) {
                      <span class="visually-hidden">Choose event type</span>
                      <img class="event__type-icon" width="17" height="17" src="img/icons/${eventType}.png" alt="Event type icon">
                    </label>
-                   <input class="event__type-toggle visually-hidden" id="event-type-toggle-${id}" type="checkbox"> 
+                   <input class="event__type-toggle visually-hidden" id="event-type-toggle-${id}" type="checkbox">
                    <div class="event__type-list">
                      <fieldset class="event__type-group">
-                       <legend class="visually-hidden">Event type</legend> 
+                       <legend class="visually-hidden">Event type</legend>
                        ${createEventTypesToggleTemplate(EVENT_TYPES, id)}
                      </fieldset>
                    </div>
-                 </div> 
+                 </div>
                  <div class="event__field-group  event__field-group--destination">
                    <label class="event__label  event__type-output" for="event-destination-${id}">
                      ${eventType}
@@ -102,30 +102,30 @@ function createEditPointTemplate(state, allOffers, destinations) {
                    <datalist id="destination-list-${id}">
                      ${createDestinationsListTemplate(destinations)}
                    </datalist>
-                 </div> 
+                 </div>
                  <div class="event__field-group event__field-group--time">
                    <label class="visually-hidden" for="event-start-time-${id}">From</label>
                    <input class="event__input event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${startDate}">
                    &mdash;
                    <label class="visually-hidden" for="event-end-time-${id}">To</label>
                    <input class="event__input event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${endDate}">
-                 </div> 
+                 </div>
                  <div class="event__field-group event__field-group--price">
                    <label class="event__label" for="event-price-${id}">
                      <span class="visually-hidden">Price</span>
                      &euro;
                    </label>
                    <input class="event__input event__input--price" id="event-price-${id}" type="text" name="event-price" value="${price}">
-                 </div> 
+                 </div>
                  <button class="event__save-btn btn btn--blue" type="submit">Save</button>
                  <button class="event__reset-btn" type="reset">Delete</button>
                  <button class="event__rollup-btn" type="button">
                    <span class="visually-hidden">Open event</span>
                  </button>
                </header>
-               <section class="event__details">                 
-                   ${createOffersTemplate(eventType, offers, specifiedTypeOffers)}                 
-                   ${createDestinationTemplate(destination.pictures, destination.description)}                 
+               <section class="event__details">
+                   ${createOffersTemplate(eventType, offers, specifiedTypeOffers)}
+                   ${createDestinationTemplate(destination.pictures, destination.description)}
                </section>
              </form>
            </li>`);
@@ -148,6 +148,12 @@ export default class EditPointView extends AbstractStatefulView {
     return createEditPointTemplate(this._state, this.#offers, this.#destinations);
   }
 
+  reset = (point) => {
+    this.updateElement(
+      EditPointView.parsePointToState(point),
+    );
+  };
+
   setFormSubmitHandler = (callback) => {
     this._callback.formSubmit = callback;
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
@@ -156,7 +162,7 @@ export default class EditPointView extends AbstractStatefulView {
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
-    //this.#rollUpButtonClickHandler();
+    this.setRollUpButtonClickHandler(this._callback.rollUpButtonClick);
   };
 
   setRollUpButtonClickHandler = (callback) => {
@@ -165,11 +171,37 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #eventTypeToggleHandler = (evt) => {
-    evt.preventDefault();
+    //evt.preventDefault();
     const eventType = evt.target.closest('.event__type-item').querySelector('.event__type-input').value;
+    const eventPriceInputValue = this.element.querySelector('.event__input--price').value;
     this.updateElement({
+      basePrice: eventPriceInputValue,
       type: eventType,
       offers: []
+    });
+  };
+
+  #offersCheckHandler = () => {
+    const REG_EXP = /\d$/;
+    const checkedOfferElements = this.element.querySelectorAll('.event__offer-checkbox:checked');
+    const checkedOffers = Array.from(checkedOfferElements).map((offerElement) => Number(offerElement.id.match(REG_EXP)[0]));
+
+    this._setState({
+      offers: checkedOffers,
+    });
+  };
+
+  #priceInputHandler = (evt) => {
+    //evt.preventDefault();
+    this._setState({
+      basePrice: evt.target.value
+    });
+  };
+
+  #destinationInputHandler = (evt) => {
+    const newDestination = this.#destinations.find((destination) => destination.name === evt.target.value) ? this.#destinations.find((destination) => destination.name === evt.target.value) : this._state.destination;
+    this.updateElement({
+      destination: newDestination
     });
   };
 
@@ -184,6 +216,9 @@ export default class EditPointView extends AbstractStatefulView {
 
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeToggleHandler);
+    this.element.querySelector('.event__details').addEventListener('click', this.#offersCheckHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationInputHandler);
   };
 
   static parsePointToState = (point) => ({...point,
