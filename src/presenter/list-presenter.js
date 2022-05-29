@@ -110,9 +110,9 @@ export default class ListPresenter {
   };
 
   #renderPoint = (point) => {
-    const specifiedTypeOffers = OFFERS.find((offer) => offer.type === point.type).offers;
+    //const specifiedTypeOffers = OFFERS.find((offer) => offer.type === point.type).offers;
     const pointPresenter = new PointPresenter(this.#listComponent.element, this.#handlePointChange, this.#handleModeChange);
-    pointPresenter.init(point, specifiedTypeOffers, DESTINATIONS);
+    pointPresenter.init(point, OFFERS, DESTINATIONS);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 

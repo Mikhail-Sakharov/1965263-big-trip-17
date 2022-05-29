@@ -32,6 +32,7 @@ function createPointTemplate(point, allOffers) {
   const eventType = type !== null ? type : 'flight';
   const eventDuration = duration(dateFrom, dateTo);
   const activeFavoriteButtonClass = isFavorite ? 'event__favorite-btn--active' : '';
+  const specifiedTypeOffers = allOffers.find((offer) => offer.type === type).offers;
 
   return (
     `<li class="trip-events__item">
@@ -52,7 +53,7 @@ function createPointTemplate(point, allOffers) {
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>        
-          ${createOffersTemplate(offers, allOffers)}        
+          ${createOffersTemplate(offers, specifiedTypeOffers)}        
         <button class="event__favorite-btn ${activeFavoriteButtonClass}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">

@@ -76,6 +76,7 @@ function createEditPointTemplate(state, allOffers, destinations) {
   const endDate = dateTo !== null ? humanizePointDueDate(dateTo, DATE_TIME_FORMAT) : '';
   const price = basePrice !== null ? basePrice : '';
   const eventType = type !== null ? type : 'flight';
+  const specifiedTypeOffers = allOffers.find((offer) => offer.type === type).offers;
 
   return (`<li class="trip-events__item">
              <form class="event event--edit" action="#" method="post">
@@ -123,10 +124,8 @@ function createEditPointTemplate(state, allOffers, destinations) {
                  </button>
                </header>
                <section class="event__details">                 
-                   ${createOffersTemplate(eventType, offers, allOffers)}
-                 
-                   ${createDestinationTemplate(destination.pictures, destination.description)}
-                 
+                   ${createOffersTemplate(eventType, offers, specifiedTypeOffers)}                 
+                   ${createDestinationTemplate(destination.pictures, destination.description)}                 
                </section>
              </form>
            </li>`);
@@ -141,6 +140,8 @@ export default class EditPointView extends AbstractStatefulView {
     this._state = EditPointView.parsePointToState(point);
     this.#offers = offers;
     this.#destinations = destinations;
+
+    this.#setInnerHandlers();
   }
 
   get template() {
@@ -152,9 +153,24 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   };
 
+  _restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    //this.#rollUpButtonClickHandler();
+  };
+
   setRollUpButtonClickHandler = (callback) => {
     this._callback.rollUpButtonClick = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpButtonClickHandler);
+  };
+
+  #eventTypeToggleHandler = (evt) => {
+    evt.preventDefault();
+    const eventType = evt.target.closest('.event__type-item').querySelector('.event__type-input').value;
+    this.updateElement({
+      type: eventType,
+      offers: []
+    });
   };
 
   #formSubmitHandler = (evt) => {
@@ -163,7 +179,11 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #rollUpButtonClickHandler = () => {
-    this._callback.rollUpButtonClick(EditPointView.parseStateToPoint(this._state));
+    this._callback.rollUpButtonClick();
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeToggleHandler);
   };
 
   static parsePointToState = (point) => ({...point,
