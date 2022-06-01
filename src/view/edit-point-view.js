@@ -1,7 +1,11 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizePointDueDate} from '../util.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
+const DATEPICKER_FORMAT = 'd/m/y H:i';
 const EVENT_TYPES = [
   'taxi',
   'bus',
@@ -132,6 +136,8 @@ function createEditPointTemplate(state, allOffers, destinations) {
 }
 
 export default class EditPointView extends AbstractStatefulView {
+  #datepicker = null;
+
   #offers = null;
   #destinations = null;
 
@@ -142,11 +148,22 @@ export default class EditPointView extends AbstractStatefulView {
     this.#destinations = destinations;
 
     this.#setInnerHandlers();
+    this.#setStartDatepicker();
+    this.#setEndDatepicker();
   }
 
   get template() {
     return createEditPointTemplate(this._state, this.#offers, this.#destinations);
   }
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
+  };
 
   reset = (point) => {
     this.updateElement(
@@ -161,6 +178,8 @@ export default class EditPointView extends AbstractStatefulView {
 
   _restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.#setStartDatepicker();
+    this.#setEndDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setRollUpButtonClickHandler(this._callback.rollUpButtonClick);
   };
@@ -170,8 +189,19 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpButtonClickHandler);
   };
 
+  #startDateChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #endDateChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
   #eventTypeToggleHandler = (evt) => {
-    //evt.preventDefault();
     const eventType = evt.target.closest('.event__type-item').querySelector('.event__type-input').value;
     const eventPriceInputValue = this.element.querySelector('.event__input--price').value;
     this.updateElement({
@@ -192,7 +222,6 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   #priceInputHandler = (evt) => {
-    //evt.preventDefault();
     this._setState({
       basePrice: evt.target.value
     });
@@ -212,6 +241,31 @@ export default class EditPointView extends AbstractStatefulView {
 
   #rollUpButtonClickHandler = () => {
     this._callback.rollUpButtonClick();
+  };
+
+  #setStartDatepicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('input[name="event-start-time"]'),
+      {
+        enableTime: true,
+        dateFormat: DATEPICKER_FORMAT,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#startDateChangeHandler
+      }
+    );
+  };
+
+  #setEndDatepicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('input[name="event-end-time"]'),
+      {
+        enableTime: true,
+        dateFormat: DATEPICKER_FORMAT,
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: this.#endDateChangeHandler
+      }
+    );
   };
 
   #setInnerHandlers = () => {
