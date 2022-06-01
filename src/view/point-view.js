@@ -5,17 +5,19 @@ const HUMAN_FORMAT = 'MMM DD';
 const DATE_FORMAT = 'YYYY-MM-DD';
 const TIME_FORMAT = 'hh:mm';
 
-function renderOffers(checkedOffersIds, allOffers) {
+function createOffersTemplate(checkedOffersIds, allOffers) {
   let result = '';
-  checkedOffersIds.forEach((checkedOfferId) => {
-    const {title, price} = allOffers.find((offer) => offer.id === checkedOfferId);
-    result = `${result  }
-                      <li class="event__offer"><span class="event__offer-title">${title}<span>&plus;&euro;&nbsp;<span class="event__offer-price">${price}</span></li>`;
-  });
-  result = `<h4 class="visually-hidden">Offers:</h4>
-                  <ul class="event__selected-offers">
-                    ${result}
-                  </ul>`;
+  if (allOffers !== null) {
+    checkedOffersIds.forEach((checkedOfferId) => {
+      const {title, price} = allOffers.find((offer) => offer.id === checkedOfferId);
+      result = `${result  }
+                        <li class="event__offer"><span class="event__offer-title">${title}<span>&plus;&euro;&nbsp;<span class="event__offer-price">${price}</span></li>`;
+    });
+    result = `<h4 class="visually-hidden">Offers:</h4>
+                    <ul class="event__selected-offers">
+                      ${result}
+                    </ul>`;
+  }
   return result;
 }
 
@@ -30,6 +32,7 @@ function createPointTemplate(point, allOffers) {
   const eventType = type !== null ? type : 'flight';
   const eventDuration = duration(dateFrom, dateTo);
   const activeFavoriteButtonClass = isFavorite ? 'event__favorite-btn--active' : '';
+  const specifiedTypeOffers = allOffers.find((offer) => offer.type === type).offers;
 
   return (
     `<li class="trip-events__item">
@@ -50,7 +53,7 @@ function createPointTemplate(point, allOffers) {
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>        
-          ${renderOffers(offers, allOffers)}        
+          ${createOffersTemplate(offers, specifiedTypeOffers)}        
         <button class="event__favorite-btn ${activeFavoriteButtonClass}" type="button">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">

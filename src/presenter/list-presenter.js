@@ -60,10 +60,9 @@ export default class ListPresenter {
   };
 
   #handlePointChange = (updatedPoint) => {
-    const specifiedTypeOffers = OFFERS.find((offer) => offer.type === updatedPoint.type).offers;
     this.#listPoints = updateItem(this.#listPoints, updatedPoint);
     this.#sourcedBoardPoints = updateItem(this.#sourcedBoardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, specifiedTypeOffers, DESTINATIONS);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, OFFERS, DESTINATIONS);
   };
 
   #sortPoints = (sortType) => {
@@ -110,16 +109,13 @@ export default class ListPresenter {
   };
 
   #renderPoint = (point) => {
-    const specifiedTypeOffers = OFFERS.find((offer) => offer.type === point.type).offers;
     const pointPresenter = new PointPresenter(this.#listComponent.element, this.#handlePointChange, this.#handleModeChange);
-    pointPresenter.init(point, specifiedTypeOffers, DESTINATIONS);
+    pointPresenter.init(point, OFFERS, DESTINATIONS);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
   #renderPoints = (points) => {
-    //points.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom));
     points.forEach((point) => this.#renderPoint(point));
-    //console.log(points);
   };
 
   #clearPointList = () => {

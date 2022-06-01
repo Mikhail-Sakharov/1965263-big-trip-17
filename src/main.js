@@ -9,7 +9,7 @@ import {returnTitleDuration, calculatePrice} from './util.js';
 const pointsArray = new PointModel();
 const points = pointsArray.points;
 
-const destinationNames = points.map((point) => point.destination.name);
+const destinationNames = points.slice().sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom)).map((point) => point.destination.name);
 
 const titleContainerElement = document.querySelector('.trip-main');
 const filtersContainerElement = document.querySelector('.trip-controls__filters');
