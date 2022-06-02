@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizePointDueDate, duration} from '../util.js';
+import {humanizePointDate, duration} from '../util.js';
 
 const HUMAN_FORMAT = 'MMM DD';
 const DATE_FORMAT = 'YYYY-MM-DD';
@@ -25,9 +25,9 @@ function createPointTemplate(point, allOffers) {
   const {type, destination, basePrice, isFavorite, dateFrom, dateTo, offers} = point;
 
   const destinationName = destination.name !== null ? destination.name : '';
-  const eventDate = dateFrom !== null ? humanizePointDueDate(dateFrom, HUMAN_FORMAT) : '';
-  const startDate = dateFrom !== null ? humanizePointDueDate(dateFrom, TIME_FORMAT) : '';
-  const endDate = dateTo !== null ? humanizePointDueDate(dateTo, TIME_FORMAT) : '';
+  const eventDate = dateFrom !== null ? humanizePointDate(dateFrom, HUMAN_FORMAT) : '';
+  const startDate = dateFrom !== null ? humanizePointDate(dateFrom, TIME_FORMAT) : '';
+  const endDate = dateTo !== null ? humanizePointDate(dateTo, TIME_FORMAT) : '';
   const price = basePrice !== null ? basePrice : '';
   const eventType = type !== null ? type : 'flight';
   const eventDuration = duration(dateFrom, dateTo);
@@ -37,7 +37,7 @@ function createPointTemplate(point, allOffers) {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${humanizePointDueDate(dateFrom, DATE_FORMAT)}">${eventDate}</time>
+        <time class="event__date" datetime="${humanizePointDate(dateFrom, DATE_FORMAT)}">${eventDate}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType}.png" alt="Event type icon">
         </div>

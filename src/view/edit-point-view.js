@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizePointDueDate} from '../util.js';
+import {humanizePointDate} from '../util.js';
 import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
@@ -76,8 +76,8 @@ function createEditPointTemplate(state, allOffers, destinations) {
   const {type, destination, basePrice, dateFrom, dateTo, offers, id} = state;
 
   const destinationName = destination.name !== null ? destination.name : '';
-  const startDate = dateFrom !== null ? humanizePointDueDate(dateFrom, DATE_TIME_FORMAT) : '';
-  const endDate = dateTo !== null ? humanizePointDueDate(dateTo, DATE_TIME_FORMAT) : '';
+  const startDate = dateFrom !== null ? humanizePointDate(dateFrom, DATE_TIME_FORMAT) : '';
+  const endDate = dateTo !== null ? humanizePointDate(dateTo, DATE_TIME_FORMAT) : '';
   const price = basePrice !== null ? basePrice : '';
   const eventType = type !== null ? type : 'flight';
   const specifiedTypeOffers = allOffers.find((offer) => offer.type === type).offers;

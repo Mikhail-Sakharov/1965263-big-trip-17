@@ -7,7 +7,7 @@ const PointsCount = {
 const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
 
-function humanizePointDueDate(date, format) {
+function humanizePointDate(date, format) {
   return dayjs(date).format(format);
 }
 
@@ -75,4 +75,4 @@ function getId() {
   return id;
 }
 
-export {getRandomInteger, getId, humanizePointDueDate, calculatePrice, returnTitleDuration, duration, generateDate, PointsCount};
+export {getRandomInteger, getId, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, PointsCount};

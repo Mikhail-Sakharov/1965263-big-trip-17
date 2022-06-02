@@ -1,14 +1,9 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import {SortType} from '../const.js';
 
-export const SortType = {
-  DEFAULT: 'default',
-  TIME_DOWN: 'time-down',
-  PRICE_DOWN: 'price-down',
-};
-
-const createSortTemplate = () => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+const createSortTemplate = (currentSortType) => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
             <div class="trip-sort__item  trip-sort__item--day">
-              <input id="sort-day" class="trip-sort__input visually-hidden" type="radio" name="trip-sort" value="sort-day" data-sort-type="${SortType.DEFAULT}" checked>
+              <input id="sort-day" class="trip-sort__input visually-hidden" type="radio" name="trip-sort" value="sort-day" data-sort-type="${SortType.DEFAULT}" ${currentSortType === SortType.DEFAULT ? 'checked' : ''}>
               <label class="trip-sort__btn" for="sort-day">Day</label>
             </div>
 
@@ -18,12 +13,12 @@ const createSortTemplate = () => `<form class="trip-events__trip-sort  trip-sort
             </div>
 
             <div class="trip-sort__item  trip-sort__item--time">
-              <input id="sort-time" class="trip-sort__input visually-hidden" type="radio" name="trip-sort" value="sort-time" data-sort-type="${SortType.TIME_DOWN}">
+              <input id="sort-time" class="trip-sort__input visually-hidden" type="radio" name="trip-sort" value="sort-time" data-sort-type="${SortType.TIME_DOWN}" ${currentSortType === SortType.TIME_DOWN ? 'checked' : ''}>
               <label class="trip-sort__btn" for="sort-time">Time</label>
             </div>
 
             <div class="trip-sort__item  trip-sort__item--price">
-              <input id="sort-price" class="trip-sort__input visually-hidden" type="radio" name="trip-sort" value="sort-price" data-sort-type="${SortType.PRICE_DOWN}">
+              <input id="sort-price" class="trip-sort__input visually-hidden" type="radio" name="trip-sort" value="sort-price" data-sort-type="${SortType.PRICE_DOWN}" ${currentSortType === SortType.PRICE_DOWN ? 'checked' : ''}>
               <label class="trip-sort__btn" for="sort-price">Price</label>
             </div>
 
@@ -34,8 +29,15 @@ const createSortTemplate = () => `<form class="trip-events__trip-sort  trip-sort
           </form>`;
 
 export default class SortView extends AbstractView {
+  #currentSortType = null;
+
+  constructor(currentSortType) {
+    super();
+    this.#currentSortType = currentSortType;
+  }
+
   get template() {
-    return createSortTemplate();
+    return createSortTemplate(this.#currentSortType);
   }
 
   setSortTypeChangeHandler = (callback) => {
