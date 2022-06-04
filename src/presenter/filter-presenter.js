@@ -1,7 +1,13 @@
+import dayjs from 'dayjs';
 import {render, replace, remove} from '../framework/render.js';
-import FilterView from '../view/filter-view.js';
-//import {filter} from '../utils/filter.js';
+import FiltersView from '../view/filters-view.js';
 import {FilterType, UpdateType} from '../const.js';
+
+const filter = {
+  [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
+  [FilterType.FUTURE]: (points) => points.filter((point) => point.dateFrom >= dayjs().toISOString()),
+  [FilterType.PAST]: (points) => points.filter((point) => point.dateTo < dayjs().toISOString())
+};
 
 export default class FilterPresenter {
   #filterContainer = null;
@@ -24,19 +30,19 @@ export default class FilterPresenter {
 
     return [
       {
-        type: FilterType.ALL,
-        name: 'All',
-        count: filter[FilterType.ALL](points).length,
+        type: FilterType.EVERYTHING,
+        name: 'Everything',
+        count: filter[FilterType.EVERYTHING](points).length,
       },
       {
-        type: FilterType.OVERDUE,
-        name: 'Overdue',
-        count: filter[FilterType.OVERDUE](points).length,
+        type: FilterType.FUTURE,
+        name: 'Future',
+        count: filter[FilterType.FUTURE](points).length,
       },
       {
-        type: FilterType.TODAY,
-        name: 'Today',
-        count: filter[FilterType.TODAY](points).length,
+        type: FilterType.PAST,
+        name: 'Past',
+        count: filter[FilterType.PAST](points).length,
       }
     ];
   }
@@ -45,7 +51,7 @@ export default class FilterPresenter {
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
 
-    this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
+    this.#filterComponent = new FiltersView(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
 
     if (prevFilterComponent === null) {

@@ -11,7 +11,7 @@ import {SortType, UpdateType, UserAction} from '../const.js';
 export default class ListPresenter {
   #listContainer = null;
   #listComponent = new ListView();
-  #emptyListMessageComponent = new EmptyListView(); //отправить в конструктор значение фильтра
+  #emptyListMessageComponent = new EmptyListView();
   #sortComponent = null;
   #pointsModel = null;
 
@@ -36,7 +36,7 @@ export default class ListPresenter {
       case SortType.PRICE_DOWN:
         return [...this.#pointsModel.points].sort((nextItem, currentItem) => currentItem.basePrice - nextItem.basePrice);
       case SortType.DEFAULT:
-        return [...this.#pointsModel.points].sort((nextItem, currentItem) => nextItem.dateFrom - currentItem.dateFrom);
+        return [...this.#pointsModel.points].sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom));
     }
 
     return this.#pointsModel.points;
@@ -47,8 +47,6 @@ export default class ListPresenter {
   };
 
   #handleViewAction = (actionType, updateType, update) => {
-    console.log(actionType, updateType, update);
-
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointsModel.updatePoint(updateType, update);
@@ -63,29 +61,20 @@ export default class ListPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    console.log(updateType, data);
-
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this.#pointPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
-        this.#clearPointList();
+        this.#clearList();
         this.#renderList();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
-        this.#clearPointList({resetSortType: true});
+        this.#clearList(true);
         this.#renderList();
         break;
     }
   };
-
-  /* #handlePointChange = (updatedPoint) => {
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, OFFERS, DESTINATIONS);
-  }; */
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
@@ -94,29 +83,28 @@ export default class ListPresenter {
 
     this.#currentSortType = sortType;
 
-    this.#clearPointList();
+    this.#clearList();
     this.#renderList();
   };
 
   #renderEmptyListMessage = () => {
-    /* const filters = new FiltersView();
-    const checkedFilter = filters.element.querySelector('input[name="trip-filter"]:checked');
+    const checkedFilter = document.querySelector('input[name="trip-filter"]:checked');
     const isChecked = !!(checkedFilter);
-    const filterValue = isChecked ? checkedFilter.value : 'everything'; */
-    render(this.#emptyListMessageComponent, this.#listContainer.element, RenderPosition.AFTERBEGIN);
+    const filterValue = isChecked ? checkedFilter.value : 'everything';
+
+    render(new EmptyListView(filterValue), this.#listContainer);
   };
 
   #renderList = () => {
     const points = this.points;
     const pointCount = points.length;
 
-    render(this.#listComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
-
-    //проверка условий фильтров и отрисовка empty-list с соответствующим сообщением
     if (pointCount === 0) {
       this.#renderEmptyListMessage();
       return;
     }
+
+    render(this.#listComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
 
     this.#renderSort();
     this.#renderPoints(this.points.slice());
@@ -138,7 +126,7 @@ export default class ListPresenter {
     points.forEach((point) => this.#renderPoint(point));
   };
 
-  #clearPointList = (resetSortType = false) => {  //нужна ли деструктуризация?
+  #clearList = (resetSortType = false) => {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 

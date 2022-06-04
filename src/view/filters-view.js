@@ -37,4 +37,13 @@ export default class FiltersView extends AbstractView {
   get template() {
     return createFiltersTemplate(this.#points);
   }
+
+  #filterTypeChangeHandler = () => {
+    this._callback.filterTypeChange();
+  };
+
+  setFilterTypeChangeHandler = (callback) => {
+    this._callback.filterTypeChange = callback;
+    this.element.querySelector('.trip-filters').addEventListener('click', this.#filterTypeChangeHandler);
+  };
 }
