@@ -2,11 +2,12 @@ import {render, RenderPosition, remove} from '../framework/render.js';
 import SortView from '../view/sort-view.js';
 import ListView from '../view/list-view.js';
 import EmptyListView from '../view/empty-list-msg.js';
-//import FiltersView from '../view/filters-view.js';
 import {OFFERS} from '../mock/offers.js';
 import {DESTINATIONS} from '../mock/destinations.js';
 import PointPresenter from './point-presenter.js';
 import {SortType, UpdateType, UserAction} from '../const.js';
+
+import {filter} from './filter-presenter.js'; //перенесётся в отдельный файл
 
 export default class ListPresenter {
   #listContainer = null;
@@ -14,15 +15,19 @@ export default class ListPresenter {
   #emptyListMessageComponent = new EmptyListView();
   #sortComponent = null;
   #pointsModel = null;
+  #filterModel = null;
 
   #pointPresenter = new Map();
 
   #currentSortType = SortType.DEFAULT;
 
-  constructor(listContainer, pointsModel) {
+  constructor(listContainer, pointsModel, filterModel) {
     this.#listContainer = listContainer;
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
+
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   init = () => {
@@ -30,16 +35,20 @@ export default class ListPresenter {
   };
 
   get points() {
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filter[filterType](points);
+
     switch (this.#currentSortType) {
       case SortType.TIME_DOWN:
-        return [...this.#pointsModel.points].sort((nextItem, currentItem) => (new Date(currentItem.dateTo) - new Date(currentItem.dateFrom)) - (new Date(nextItem.dateTo) - new Date(nextItem.dateFrom)));
+        return filteredPoints.sort((nextItem, currentItem) => (new Date(currentItem.dateTo) - new Date(currentItem.dateFrom)) - (new Date(nextItem.dateTo) - new Date(nextItem.dateFrom)));
       case SortType.PRICE_DOWN:
-        return [...this.#pointsModel.points].sort((nextItem, currentItem) => currentItem.basePrice - nextItem.basePrice);
+        return filteredPoints.sort((nextItem, currentItem) => currentItem.basePrice - nextItem.basePrice);
       case SortType.DEFAULT:
-        return [...this.#pointsModel.points].sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom));
+        return filteredPoints.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom));
     }
 
-    return this.#pointsModel.points;
+    return filteredPoints;
   }
 
   #handleModeChange = () => {

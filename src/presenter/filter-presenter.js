@@ -3,7 +3,7 @@ import {render, replace, remove} from '../framework/render.js';
 import FiltersView from '../view/filters-view.js';
 import {FilterType, UpdateType} from '../const.js';
 
-const filter = {
+export const filter = {  //вынести в отдельный файл
   [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
   [FilterType.FUTURE]: (points) => points.filter((point) => point.dateFrom >= dayjs().toISOString()),
   [FilterType.PAST]: (points) => points.filter((point) => point.dateTo < dayjs().toISOString())

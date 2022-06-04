@@ -1,49 +1,44 @@
-import dayjs from 'dayjs';
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createFiltersTemplate(points = []) {
-  const isEverything = points.length !== 0;
-  const isFuture = points.some((point) => point.dateFrom >= dayjs().toISOString());
-  const isPast = points.some((point) => point.dateTo < dayjs().toISOString());
+function createFilterItemTemplate(filter, currentFilterType) {
+  const {type, name, count} = filter;
+
+  return `<div class="trip-filters__filter">
+                  <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${count === 0 ? 'disabled' : ''} ${type === currentFilterType ? 'checked' : ''}>
+                  <label class="trip-filters__filter-label" for="filter-${type}">${name}</label>
+                </div>`;
+}
+
+function createFiltersTemplate(filters, currentFilterType) {
+  const filtersTemplate = filters.map((filter) => createFilterItemTemplate(filter, currentFilterType)).join(' ');
 
   return `<form class="trip-filters" action="#" method="get">
-                <div class="trip-filters__filter">
-                  <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" ${isEverything  ? '' : 'disabled'} checked>
-                  <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-                </div>
-
-                <div class="trip-filters__filter">
-                  <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" ${isFuture ? '' : 'disabled'}>
-                  <label class="trip-filters__filter-label" for="filter-future">Future</label>
-                </div>
-
-                <div class="trip-filters__filter">
-                  <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" ${isPast ? '' : 'disabled'}>
-                  <label class="trip-filters__filter-label" for="filter-past">Past</label>
-                </div>
-
+                ${filtersTemplate}
                 <button class="visually-hidden" type="submit">Accept filter</button>
               </form>`;
 }
 
 export default class FiltersView extends AbstractView {
-  #points = null;
+  #filters = null;
+  #currentFilter = null;
 
-  constructor(points) {
+  constructor(filters, currentFilterType) {
     super();
-    this.#points = points;
+    this.#filters = filters;
+    this.#currentFilter = currentFilterType;
   }
 
   get template() {
-    return createFiltersTemplate(this.#points);
+    return createFiltersTemplate(this.#filters, this.#currentFilter);
   }
 
-  #filterTypeChangeHandler = () => {
-    this._callback.filterTypeChange();
+  setFilterTypeChangeHandler = (callback) => {
+    this._callback.filterTypeChange = callback;
+    this.element.addEventListener('click', this.#filterTypeChangeHandler);
   };
 
-  /* setFilterTypeChangeHandler = (callback) => {
-    this._callback.filterTypeChange = callback;
-    this.element.querySelector('.trip-filters').addEventListener('submit', this.#filterTypeChangeHandler);
-  }; */
+  #filterTypeChangeHandler = (evt) => {
+    const value = evt.target.closest('.trip-filters__filter').querySelector('input').value;
+    this._callback.filterTypeChange(value);
+  };
 }
