@@ -5,14 +5,14 @@ import EmptyListView from '../view/empty-list-msg.js';
 import {OFFERS} from '../mock/offers.js';
 import {DESTINATIONS} from '../mock/destinations.js';
 import PointPresenter from './point-presenter.js';
-import {SortType, UpdateType, UserAction} from '../const.js';
+import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 
 import {filter} from './filter-presenter.js'; //перенесётся в отдельный файл
 
 export default class ListPresenter {
   #listContainer = null;
   #listComponent = new ListView();
-  #emptyListMessageComponent = new EmptyListView();
+  #emptyListMessageComponent = null;
   #sortComponent = null;
   #pointsModel = null;
   #filterModel = null;
@@ -20,6 +20,7 @@ export default class ListPresenter {
   #pointPresenter = new Map();
 
   #currentSortType = SortType.DEFAULT;
+  #filterType = FilterType.EVERYTHING;
 
   constructor(listContainer, pointsModel, filterModel) {
     this.#listContainer = listContainer;
@@ -35,9 +36,9 @@ export default class ListPresenter {
   };
 
   get points() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[filterType](points);
+    const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.TIME_DOWN:
@@ -97,11 +98,8 @@ export default class ListPresenter {
   };
 
   #renderEmptyListMessage = () => {
-    const checkedFilter = document.querySelector('input[name="trip-filter"]:checked');
-    const isChecked = !!(checkedFilter);
-    const filterValue = isChecked ? checkedFilter.value : 'everything';
-
-    render(new EmptyListView(filterValue), this.#listContainer);
+    this.#emptyListMessageComponent = new EmptyListView(this.#filterType);
+    render(this.#emptyListMessageComponent, this.#listContainer);
   };
 
   #renderList = () => {
@@ -140,7 +138,9 @@ export default class ListPresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
-    remove(this.#emptyListMessageComponent);
+    if (this.#emptyListMessageComponent) {
+      remove(this.#emptyListMessageComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;
