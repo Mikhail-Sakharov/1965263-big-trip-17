@@ -27,5 +27,18 @@ if (points && points.length !== 0) {
   render(new TitleView(destinationNames, totalPrice, titleDuration), titleContainerElement, RenderPosition.AFTERBEGIN);
 }
 
+const newPointButtonElement = document.querySelector('.trip-main__event-add-btn');
+
+const handleNewPointFormClose = () => {
+  newPointButtonElement.disabled = false;
+};
+
+const newPointButtonClickHandler = () => {
+  listPresenter.createPoint(handleNewPointFormClose);
+  newPointButtonElement.disabled = true;
+};
+
+newPointButtonElement.addEventListener('click', newPointButtonClickHandler);
+
 filterPresenter.init();
 listPresenter.init();

@@ -2,11 +2,13 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizePointDate} from '../util.js';
 import flatpickr from 'flatpickr';
 
+import {DESTINATIONS} from '../mock/destinations.js'; //оставляем?
+
 import 'flatpickr/dist/flatpickr.min.css';
 
 const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
 const DATEPICKER_FORMAT = 'd/m/y H:i';
-const EVENT_TYPES = [
+const EVENT_TYPES = [ //в константы
   'taxi',
   'bus',
   'train',
@@ -17,7 +19,7 @@ const EVENT_TYPES = [
   'sightseeing',
   'restaurant'
 ];
-const BLANK_POINT = {
+const BLANK_POINT = {  //перенести в презентер или в коестанты
   basePrice: null,
   dateFrom: null,
   dateTo: null,
@@ -35,7 +37,7 @@ function createEventTypesToggleTemplate(eventTypes, id) {
                                     </div>`).join(' ');
 }
 
-function createDestinationsListTemplate(destinations) {
+function createDestinationsListTemplate(destinations = DESTINATIONS) {
   return destinations.map((destination) => `<option value="${destination.name}"></option>`).join(' ');
 }
 
@@ -72,16 +74,17 @@ function createOffersTemplate(eventType, checkedOffers, allOffers) {
               </section>` : '';
 }
 
-function createEditPointTemplate(state, allOffers, destinations) {
+function createEditPointTemplate(state = BLANK_POINT, allOffers = null, destinations) {
   const {type, destination, basePrice, dateFrom, dateTo, offers, id} = state;
 
-  const destinationName = destination.name !== null ? destination.name : '';
+  const destinationName = destination !== null ? destination.name : '';
+  const destinationPictures = destination !== null ? destination.pictures : null; //?
+  const destinationDescription = destination !== null ? destination.description : null; //?
   const startDate = dateFrom !== null ? humanizePointDate(dateFrom, DATE_TIME_FORMAT) : '';
   const endDate = dateTo !== null ? humanizePointDate(dateTo, DATE_TIME_FORMAT) : '';
   const price = basePrice !== null ? basePrice : '';
   const eventType = type !== null ? type : 'flight';
-  const specifiedTypeOffers = allOffers.find((offer) => offer.type === type).offers;
-
+  const specifiedTypeOffers = allOffers !== null ? allOffers.find((offer) => offer.type === eventType).offers : null; //?
   return (`<li class="trip-events__item">
              <form class="event event--edit" action="#" method="post">
                <header class="event__header">
@@ -129,7 +132,7 @@ function createEditPointTemplate(state, allOffers, destinations) {
                </header>
                <section class="event__details">
                    ${createOffersTemplate(eventType, offers, specifiedTypeOffers)}
-                   ${createDestinationTemplate(destination.pictures, destination.description)}
+                   ${createDestinationTemplate(destinationPictures, destinationDescription)}
                </section>
              </form>
            </li>`);

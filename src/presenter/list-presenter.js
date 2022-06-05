@@ -2,9 +2,10 @@ import {render, RenderPosition, remove} from '../framework/render.js';
 import SortView from '../view/sort-view.js';
 import ListView from '../view/list-view.js';
 import EmptyListView from '../view/empty-list-msg.js';
+import PointPresenter from './point-presenter.js';
+import NewPointPresenter from './new-point-presenter.js';
 import {OFFERS} from '../mock/offers.js';
 import {DESTINATIONS} from '../mock/destinations.js';
-import PointPresenter from './point-presenter.js';
 import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 
 import {filter} from './filter-presenter.js'; //перенесётся в отдельный файл
@@ -18,6 +19,7 @@ export default class ListPresenter {
   #filterModel = null;
 
   #pointPresenter = new Map();
+  #newPointPresenter = null;
 
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.EVERYTHING;
@@ -27,12 +29,20 @@ export default class ListPresenter {
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
 
+    this.#newPointPresenter = new NewPointPresenter(this.#listComponent.element, this.#handleViewAction);
+
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   init = () => {
     this.#renderList();
+  };
+
+  createPoint = (callback) => {
+    this.#currentSortType = SortType.DEFAULT;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newPointPresenter.init(callback);
   };
 
   get points() {
@@ -53,6 +63,7 @@ export default class ListPresenter {
   }
 
   #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
@@ -134,6 +145,7 @@ export default class ListPresenter {
   };
 
   #clearList = (resetSortType = false) => {
+    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
