@@ -2,10 +2,14 @@ import dayjs from 'dayjs';
 
 const PointsCount = {
   MIN: 1,
-  MAX: 25
+  MAX: 10
 };
 const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
+
+function transformDateToISOString(date) {
+  return dayjs(date).toISOString();
+}
 
 function humanizePointDate(date, format) {
   return dayjs(date).format(format);
@@ -75,4 +79,4 @@ function getId() {
   return id;
 }
 
-export {getRandomInteger, getId, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, PointsCount};
+export {getRandomInteger, getId, transformDateToISOString, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, PointsCount};

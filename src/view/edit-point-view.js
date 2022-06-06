@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizePointDate} from '../util.js';
+import {humanizePointDate, transformDateToISOString} from '../util.js';
 import flatpickr from 'flatpickr';
 
 import {DESTINATIONS} from '../mock/destinations.js'; //оставляем?
@@ -200,13 +200,13 @@ export default class EditPointView extends AbstractStatefulView {
 
   #startDateChangeHandler = ([userDate]) => {
     this.updateElement({
-      dateFrom: userDate,
+      dateFrom: transformDateToISOString(userDate),
     });
   };
 
   #endDateChangeHandler = ([userDate]) => {
     this.updateElement({
-      dateTo: userDate,
+      dateTo: transformDateToISOString(userDate),
     });
   };
 
@@ -291,15 +291,15 @@ export default class EditPointView extends AbstractStatefulView {
   };
 
   static parsePointToState = (point) => ({...point,
-    isCheckedOffers: point.offers.length !== 0,
-    isDestination: point.destination !== null
+    isCheckedOffers: point.offers.length !== 0,  //удалить
+    isDestination: point.destination !== null  //удалить
   });
 
   static parseStateToPoint = (state) => {
     const point = {...state};
 
-    delete point.isCheckedOffers;
-    delete point.isDestination;
+    delete point.isCheckedOffers;  //удалить
+    delete point.isDestination;  //удалить
 
     return point;
   };

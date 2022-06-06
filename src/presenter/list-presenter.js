@@ -122,10 +122,10 @@ export default class ListPresenter {
       return;
     }
 
+    this.#renderSort();
     render(this.#listComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
 
-    this.#renderSort();
-    this.#renderPoints(this.points.slice());
+    this.#renderPoints(points.slice());
   };
 
   #renderSort = () => {

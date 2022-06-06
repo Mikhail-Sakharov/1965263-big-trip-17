@@ -38,7 +38,15 @@ export default class FiltersView extends AbstractView {
   };
 
   #filterTypeChangeHandler = (evt) => {
-    const value = evt.target.closest('.trip-filters__filter').querySelector('input').value;
-    this._callback.filterTypeChange(value);
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
+    const target = evt.target.closest('.trip-filters__filter').querySelector('input');
+    const isFilterDisabled = target.disabled;
+    if (isFilterDisabled) {
+      return;
+    }
+    const filterType = evt.target.closest('.trip-filters__filter').querySelector('input').value;
+    this._callback.filterTypeChange(filterType);
   };
 }

@@ -24,7 +24,7 @@ function createOffersTemplate(checkedOffersIds, allOffers) {
 function createPointTemplate(point, allOffers) {
   const {type, destination, basePrice, isFavorite, dateFrom, dateTo, offers} = point;
 
-  const destinationName = destination.name !== null ? destination.name : '';
+  const destinationName = destination !== null ? destination.name : '';
   const eventDate = dateFrom !== null ? humanizePointDate(dateFrom, HUMAN_FORMAT) : '';
   const startDate = dateFrom !== null ? humanizePointDate(dateFrom, TIME_FORMAT) : '';
   const endDate = dateTo !== null ? humanizePointDate(dateTo, TIME_FORMAT) : '';
@@ -32,7 +32,7 @@ function createPointTemplate(point, allOffers) {
   const eventType = type !== null ? type : 'flight';
   const eventDuration = duration(dateFrom, dateTo);
   const activeFavoriteButtonClass = isFavorite ? 'event__favorite-btn--active' : '';
-  const specifiedTypeOffers = allOffers.find((offer) => offer.type === type).offers;
+  const specifiedTypeOffers = allOffers.find((offer) => offer.type === eventType).offers;
 
   return (
     `<li class="trip-events__item">
