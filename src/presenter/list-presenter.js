@@ -1,14 +1,13 @@
 import {render, RenderPosition, remove} from '../framework/render.js';
 import SortView from '../view/sort-view.js';
 import ListView from '../view/list-view.js';
-import EmptyListView from '../view/empty-list-msg.js';
+import EmptyListView from '../view/empty-list-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import {OFFERS} from '../mock/offers.js';
 import {DESTINATIONS} from '../mock/destinations.js';
 import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
-
-import {filter} from './filter-presenter.js'; //перенесётся в отдельный файл
+import {filter} from '../util.js';
 
 export default class ListPresenter {
   #listContainer = null;

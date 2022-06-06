@@ -1,34 +1,12 @@
+import flatpickr from 'flatpickr';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizePointDate, transformDateToISOString} from '../util.js';
-import flatpickr from 'flatpickr';
-
-import {DESTINATIONS} from '../mock/destinations.js'; //оставляем?
+import {EVENT_TYPES, BLANK_POINT} from '../const.js';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
 const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
 const DATEPICKER_FORMAT = 'd/m/y H:i';
-const EVENT_TYPES = [ //в константы
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant'
-];
-const BLANK_POINT = {  //перенести в презентер или в коестанты
-  basePrice: null,
-  dateFrom: null,
-  dateTo: null,
-  destination: null,
-  id: null,
-  isFavorite: false,
-  offers: [],
-  type: null
-};
 
 function createEventTypesToggleTemplate(eventTypes, id) {
   return eventTypes.map((eventType) => `<div class="event__type-item">
@@ -37,7 +15,7 @@ function createEventTypesToggleTemplate(eventTypes, id) {
                                     </div>`).join(' ');
 }
 
-function createDestinationsListTemplate(destinations = DESTINATIONS) {
+function createDestinationsListTemplate(destinations) {
   return destinations.map((destination) => `<option value="${destination.name}"></option>`).join(' ');
 }
 
@@ -78,13 +56,13 @@ function createEditPointTemplate(state = BLANK_POINT, allOffers = null, destinat
   const {type, destination, basePrice, dateFrom, dateTo, offers, id} = state;
 
   const destinationName = destination !== null ? destination.name : '';
-  const destinationPictures = destination !== null ? destination.pictures : null; //?
-  const destinationDescription = destination !== null ? destination.description : null; //?
+  const destinationPictures = destination !== null ? destination.pictures : null;
+  const destinationDescription = destination !== null ? destination.description : null;
   const startDate = dateFrom !== null ? humanizePointDate(dateFrom, DATE_TIME_FORMAT) : '';
   const endDate = dateTo !== null ? humanizePointDate(dateTo, DATE_TIME_FORMAT) : '';
   const price = basePrice !== null ? basePrice : '';
   const eventType = type !== null ? type : 'flight';
-  const specifiedTypeOffers = allOffers !== null ? allOffers.find((offer) => offer.type === eventType).offers : null; //?
+  const specifiedTypeOffers = allOffers !== null ? allOffers.find((offer) => offer.type === eventType).offers : null;
   return (`<li class="trip-events__item">
              <form class="event event--edit" action="#" method="post">
                <header class="event__header">
@@ -290,17 +268,10 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationInputHandler);
   };
 
-  static parsePointToState = (point) => ({...point,
-    isCheckedOffers: point.offers.length !== 0,  //удалить
-    isDestination: point.destination !== null  //удалить
-  });
+  static parsePointToState = (point) => ({...point});
 
   static parseStateToPoint = (state) => {
     const point = {...state};
-
-    delete point.isCheckedOffers;  //удалить
-    delete point.isDestination;  //удалить
-
     return point;
   };
 }

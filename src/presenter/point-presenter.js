@@ -108,10 +108,19 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {  //нужна проверка изменения данных и типа обновления 7.1.6
+  //изменение цены и дат может привести к перерисовке списка => MINOR иначе PATCH
+    const {basePrice, type} = point;
+    const eventType = type ? type : 'flight';
+    const formattedBasePrice = basePrice && basePrice !== 0 ? Number(basePrice) : 0;
+
     this.#changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
-      point
+      {
+        ...point,
+        basePrice: formattedBasePrice,
+        type: eventType
+      }
     );
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#escKeyDownHandler);

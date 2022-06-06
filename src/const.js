@@ -22,4 +22,27 @@ const SortType = {
   PRICE_DOWN: 'price-down',
 };
 
-export {FilterType, UserAction, UpdateType, SortType};
+const EVENT_TYPES = [
+  'taxi',
+  'bus',
+  'train',
+  'ship',
+  'drive',
+  'flight',
+  'check-in',
+  'sightseeing',
+  'restaurant'
+];
+
+const BLANK_POINT = {
+  basePrice: null,
+  dateFrom: null,
+  dateTo: null,
+  destination: null,
+  id: null,
+  isFavorite: false,
+  offers: [],
+  type: null
+};
+
+export {FilterType, UserAction, UpdateType, SortType, EVENT_TYPES, BLANK_POINT};

@@ -1,22 +1,10 @@
 import EditPointView from '../view/edit-point-view.js';
 import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
-//import {getId} from '../util.js';
 import {OFFERS} from '../mock/offers.js';
 import {DESTINATIONS} from '../mock/destinations.js';
-
 import {nanoid} from 'nanoid';
-
-const BLANK_POINT = {  //перенести в константы
-  basePrice: null,
-  dateFrom: null,
-  dateTo: null,
-  destination: null,
-  id: null,
-  isFavorite: false,
-  offers: [],
-  type: null
-};
+import {BLANK_POINT} from '../const.js';
 
 export default class NewPointPresenter {
   #listContainer = null;
@@ -67,10 +55,10 @@ export default class NewPointPresenter {
     }
   };
 
-  #handleFormSubmit = (point) => { //валидация формы, если не заполнены все поля
+  #handleFormSubmit = (point) => {
     const {basePrice, type} = point;
     const eventType = type ? type : 'flight';
-    const formattedBasePrice = basePrice ? Number(basePrice) : 0;
+    const formattedBasePrice = basePrice && basePrice !== 0 ? Number(basePrice) : 0;
 
     this.#changeData(
       UserAction.ADD_POINT,

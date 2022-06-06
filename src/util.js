@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {FilterType} from './const.js';
 
 const PointsCount = {
   MIN: 1,
@@ -22,6 +23,12 @@ function calculatePrice(pointsData, allOffers) {
 
   return eventsTotalPrice;
 }
+
+const filter = {
+  [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
+  [FilterType.FUTURE]: (points) => points.filter((point) => point.dateFrom >= dayjs().toISOString()),
+  [FilterType.PAST]: (points) => points.filter((point) => point.dateTo < dayjs().toISOString())
+};
 
 function returnTitleDuration(points) {
   const startDates = points.map((point) => point.dateFrom);
@@ -79,4 +86,4 @@ function getId() {
   return id;
 }
 
-export {getRandomInteger, getId, transformDateToISOString, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, PointsCount};
+export {getRandomInteger, getId, transformDateToISOString, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, filter, PointsCount};

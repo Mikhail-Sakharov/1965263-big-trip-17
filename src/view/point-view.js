@@ -1,3 +1,4 @@
+import he from 'he';
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizePointDate, duration} from '../util.js';
 
@@ -28,7 +29,7 @@ function createPointTemplate(point, allOffers) {
   const eventDate = dateFrom !== null ? humanizePointDate(dateFrom, HUMAN_FORMAT) : '';
   const startDate = dateFrom !== null ? humanizePointDate(dateFrom, TIME_FORMAT) : '';
   const endDate = dateTo !== null ? humanizePointDate(dateTo, TIME_FORMAT) : '';
-  const price = basePrice !== null ? basePrice : '';
+  const price = basePrice !== null ? String(basePrice) : '';
   const eventType = type !== null ? type : 'flight';
   const eventDuration = duration(dateFrom, dateTo);
   const activeFavoriteButtonClass = isFavorite ? 'event__favorite-btn--active' : '';
@@ -51,7 +52,7 @@ function createPointTemplate(point, allOffers) {
           <p class="event__duration">${eventDuration}</p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${price}</span>
+          &euro;&nbsp;<span class="event__price-value">${he.encode(price)}</span>
         </p>        
           ${createOffersTemplate(offers, specifiedTypeOffers)}        
         <button class="event__favorite-btn ${activeFavoriteButtonClass}" type="button">
