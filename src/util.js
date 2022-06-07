@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {FilterType} from './const.js';
+import {FilterType, SortType} from './const.js';
 
 const PointsCount = {
   MIN: 1,
@@ -28,6 +28,12 @@ const filter = {
   [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
   [FilterType.FUTURE]: (points) => points.filter((point) => point.dateFrom >= dayjs().toISOString()),
   [FilterType.PAST]: (points) => points.filter((point) => point.dateTo < dayjs().toISOString())
+};
+
+const sort = {
+  [SortType.TIME_DOWN]: (points) => points.sort((nextItem, currentItem) => (new Date(currentItem.dateTo) - new Date(currentItem.dateFrom)) - (new Date(nextItem.dateTo) - new Date(nextItem.dateFrom))),
+  [SortType.PRICE_DOWN]: (points) => points.sort((nextItem, currentItem) => currentItem.basePrice - nextItem.basePrice),
+  [SortType.DEFAULT]: (points) => points.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom))
 };
 
 function returnTitleDuration(points) {
@@ -86,4 +92,4 @@ function getId() {
   return id;
 }
 
-export {getRandomInteger, getId, transformDateToISOString, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, filter, PointsCount};
+export {getRandomInteger, getId, transformDateToISOString, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, filter, sort, PointsCount};

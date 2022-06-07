@@ -41,8 +41,7 @@ export default class FiltersView extends AbstractView {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
-    const target = evt.target.closest('.trip-filters__filter').querySelector('input');
-    const isFilterDisabled = target.disabled;
+    const isFilterDisabled = evt.target.closest('.trip-filters__filter').querySelector('input').disabled;
     if (isFilterDisabled) {
       return;
     }

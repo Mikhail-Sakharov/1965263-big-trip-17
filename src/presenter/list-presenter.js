@@ -7,7 +7,7 @@ import NewPointPresenter from './new-point-presenter.js';
 import {OFFERS} from '../mock/offers.js';
 import {DESTINATIONS} from '../mock/destinations.js';
 import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
-import {filter} from '../util.js';
+import {filter, sort} from '../util.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -48,17 +48,9 @@ export default class ListPresenter {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#filterType](points);
+    const sortedPoints = sort[this.#currentSortType](filteredPoints);
 
-    switch (this.#currentSortType) {
-      case SortType.TIME_DOWN:
-        return filteredPoints.sort((nextItem, currentItem) => (new Date(currentItem.dateTo) - new Date(currentItem.dateFrom)) - (new Date(nextItem.dateTo) - new Date(nextItem.dateFrom)));
-      case SortType.PRICE_DOWN:
-        return filteredPoints.sort((nextItem, currentItem) => currentItem.basePrice - nextItem.basePrice);
-      case SortType.DEFAULT:
-        return filteredPoints.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom));
-    }
-
-    return filteredPoints;
+    return sortedPoints;
   }
 
   #handleModeChange = () => {

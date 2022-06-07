@@ -57,8 +57,6 @@ export default class NewPointPresenter {
 
   #handleFormSubmit = (point) => {
     const {basePrice, type} = point;
-    const eventType = type ? type : 'flight';
-    const formattedBasePrice = basePrice && basePrice !== 0 ? Number(basePrice) : 0;
 
     this.#changeData(
       UserAction.ADD_POINT,
@@ -66,8 +64,8 @@ export default class NewPointPresenter {
       {
         ...point,
         id: nanoid(),
-        basePrice: formattedBasePrice,
-        type: eventType
+        basePrice: Number(basePrice ?? 0),
+        type: type ?? 'flight'
       }
     );
     this.destroy();
