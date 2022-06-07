@@ -13,7 +13,7 @@ export default class PointModel extends Observable {
 
   updatePoint = (updateType, update) => {
     this.#points = [...this.#points.map((point) => point.id === update.id ? update : point)];
-    console.log(this.#points);
+
     this._notify(updateType, update);
   };
 
@@ -22,13 +22,13 @@ export default class PointModel extends Observable {
       update,
       ...this.#points,
     ];
-    console.log(this.#points);
+
     this._notify(updateType, update);
   };
 
   deletePoint = (updateType, update) => {
     this.#points = [...this.#points.filter((point) => point.id !== update.id)];
-    console.log(this.#points);
+
     this._notify(updateType);
   };
 }
