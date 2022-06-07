@@ -1,13 +1,18 @@
 import dayjs from 'dayjs';
+import {FilterType, SortType} from './const.js';
 
 const PointsCount = {
   MIN: 1,
-  MAX: 25
+  MAX: 10
 };
 const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
 
-function humanizePointDueDate(date, format) {
+function transformDateToISOString(date) {
+  return dayjs(date).toISOString();
+}
+
+function humanizePointDate(date, format) {
   return dayjs(date).format(format);
 }
 
@@ -18,6 +23,18 @@ function calculatePrice(pointsData, allOffers) {
 
   return eventsTotalPrice;
 }
+
+const filter = {
+  [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
+  [FilterType.FUTURE]: (points) => points.filter((point) => point.dateFrom >= dayjs().toISOString()),
+  [FilterType.PAST]: (points) => points.filter((point) => point.dateTo < dayjs().toISOString())
+};
+
+const sort = {
+  [SortType.TIME_DOWN]: (points) => points.sort((nextItem, currentItem) => (new Date(currentItem.dateTo) - new Date(currentItem.dateFrom)) - (new Date(nextItem.dateTo) - new Date(nextItem.dateFrom))),
+  [SortType.PRICE_DOWN]: (points) => points.sort((nextItem, currentItem) => currentItem.basePrice - nextItem.basePrice),
+  [SortType.DEFAULT]: (points) => points.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom))
+};
 
 function returnTitleDuration(points) {
   const startDates = points.map((point) => point.dateFrom);
@@ -75,4 +92,4 @@ function getId() {
   return id;
 }
 
-export {getRandomInteger, getId, humanizePointDueDate, calculatePrice, returnTitleDuration, duration, generateDate, PointsCount};
+export {getRandomInteger, getId, transformDateToISOString, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, filter, sort, PointsCount};
