@@ -17,11 +17,11 @@ export default class PointsApiService extends ApiService {
   }
 
   get destinations() {
-    return this._load({url: 'destinations'})
+    return this._load({url: 'destination'})
       .then(ApiService.parseResponse);
   }
 
-  updateTask = async (point) => {
+  updatePoint = async (point) => {
     const response = await this._load({
       url: `points/${point.id}`,
       method: Method.PUT,

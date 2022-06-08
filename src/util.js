@@ -7,6 +7,11 @@ const PointsCount = {
 };
 const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
+const ALERT_SHOW_TIME = 3000;
+const MessageText = {
+  'offers': 'Ошибка загрузки дополнительных опций',
+  'destinations': 'Ошибка загрузки пунктов назначения'
+};
 
 function transformDateToISOString(date) {
   return dayjs(date).toISOString();
@@ -92,4 +97,18 @@ function getId() {
   return id;
 }
 
-export {getRandomInteger, getId, transformDateToISOString, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, filter, sort, PointsCount};
+function showLoadFailMessage(messageType) {
+  const alertContainerElement = document.createElement('div');
+  alertContainerElement.classList.add('alert__container');
+  const alertElement = document.createElement('div');
+  alertElement.classList.add('alert__message');
+  alertElement.textContent = MessageText[messageType];
+  alertContainerElement.append(alertElement);
+  document.body.append(alertContainerElement);
+
+  setTimeout(() => {
+    alertContainerElement.remove();
+  }, ALERT_SHOW_TIME);
+}
+
+export {showLoadFailMessage, getRandomInteger, getId, transformDateToISOString, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, filter, sort, PointsCount};

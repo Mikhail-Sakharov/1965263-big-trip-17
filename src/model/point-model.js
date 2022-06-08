@@ -1,13 +1,19 @@
 import Observable from '../framework/observable.js';
 import {UpdateType} from '../const.js';
+import {showLoadFailMessage} from '../util.js';
+
+const MessageType = {
+  OFFERS: 'offers',
+  DESTINATIONS: 'destinations'
+};
 
 const newPointButtonElement = document.querySelector('.trip-main__event-add-btn');
 
 export default class PointModel extends Observable {
   #pointsApiService = null;
   #points = [];
-  #offers = []; //проверить дефолт
-  #destinations = null; //проверить дефолт
+  #offers = [];
+  #destinations = null;
 
   constructor(pointsApiService) {
     super();
@@ -39,12 +45,14 @@ export default class PointModel extends Observable {
       this.#offers = await this.#pointsApiService.offers;
     } catch(err) {
       this.#offers = null;  //придумать свой вариант обработки ошибки
+      showLoadFailMessage(MessageType.OFFERS);
     }
 
     try {
       this.#destinations = await this.#pointsApiService.destinations;
     } catch(err) {
       this.#destinations = null;  //придумать свой вариант обработки ошибки
+      showLoadFailMessage(MessageType.OFFERS);
     }
 
     this._notify(UpdateType.INIT);
