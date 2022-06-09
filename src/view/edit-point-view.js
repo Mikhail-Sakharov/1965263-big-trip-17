@@ -16,6 +16,9 @@ function createEventTypesToggleTemplate(eventTypes, id) {
 }
 
 function createDestinationsListTemplate(destinations) {
+  if (!destinations) {
+    return '';
+  }
   return destinations.map((destination) => `<option value="${destination.name}"></option>`).join(' ');
 }
 

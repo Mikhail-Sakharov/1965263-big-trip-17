@@ -4,14 +4,14 @@ import ListView from '../view/list-view.js';
 import EmptyListView from '../view/empty-list-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
-import {OFFERS} from '../mock/offers.js';
-import {DESTINATIONS} from '../mock/destinations.js';
+import LoadingView from '../view/loading-view.js';
 import {SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import {filter, sort} from '../util.js';
 
 export default class ListPresenter {
   #listContainer = null;
   #listComponent = new ListView();
+  #loadingComponent = new LoadingView();
   #emptyListMessageComponent = null;
   #sortComponent = null;
   #pointsModel = null;
@@ -22,6 +22,7 @@ export default class ListPresenter {
 
   #currentSortType = SortType.DEFAULT;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor(listContainer, pointsModel, filterModel) {
     this.#listContainer = listContainer;
@@ -85,6 +86,11 @@ export default class ListPresenter {
         this.#clearList(true);
         this.#renderList();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderList();
+        break;
     }
   };
 
@@ -99,12 +105,21 @@ export default class ListPresenter {
     this.#renderList();
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
+  };
+
   #renderEmptyListMessage = () => {
     this.#emptyListMessageComponent = new EmptyListView(this.#filterType);
     render(this.#emptyListMessageComponent, this.#listContainer);
   };
 
   #renderList = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const points = this.points;
     const pointCount = points.length;
 
@@ -113,9 +128,9 @@ export default class ListPresenter {
       return;
     }
 
-    this.#renderSort();
     render(this.#listComponent, this.#listContainer, RenderPosition.AFTERBEGIN);
 
+    this.#renderSort();
     this.#renderPoints(points.slice());
   };
 
@@ -127,7 +142,7 @@ export default class ListPresenter {
 
   #renderPoint = (point) => {
     const pointPresenter = new PointPresenter(this.#listComponent.element, this.#handleViewAction, this.#handleModeChange);
-    pointPresenter.init(point, OFFERS, DESTINATIONS);
+    pointPresenter.init(point, this.#pointsModel.offers, this.#pointsModel.destinations);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
@@ -141,6 +156,7 @@ export default class ListPresenter {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
     if (this.#emptyListMessageComponent) {
       remove(this.#emptyListMessageComponent);
     }
