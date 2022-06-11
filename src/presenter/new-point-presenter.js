@@ -3,7 +3,7 @@ import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
 import {OFFERS} from '../mock/offers.js';
 import {DESTINATIONS} from '../mock/destinations.js';
-import {nanoid} from 'nanoid';
+//import {nanoid} from 'nanoid';
 import {BLANK_POINT} from '../const.js';
 
 export default class NewPointPresenter {
@@ -63,7 +63,7 @@ export default class NewPointPresenter {
       UpdateType.MINOR,
       {
         ...point,
-        id: nanoid(),
+        //id: nanoid(),
         basePrice: Number(basePrice ?? 0),
         type: type ?? 'flight'
       }
