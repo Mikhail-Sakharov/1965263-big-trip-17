@@ -55,6 +55,13 @@ export default class NewPointPresenter {
     }
   };
 
+  setSaving = () => {
+    this.#editPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
   #handleFormSubmit = (point) => {
     const {basePrice, type} = point;
 
@@ -68,7 +75,6 @@ export default class NewPointPresenter {
         type: type ?? 'flight'
       }
     );
-    this.destroy();
   };
 
   #handleRollUpButtonClick = () => {
