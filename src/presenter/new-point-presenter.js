@@ -3,7 +3,6 @@ import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
 import {OFFERS} from '../mock/offers.js';
 import {DESTINATIONS} from '../mock/destinations.js';
-//import {nanoid} from 'nanoid';
 import {BLANK_POINT} from '../const.js';
 
 export default class NewPointPresenter {
@@ -62,6 +61,18 @@ export default class NewPointPresenter {
     });
   };
 
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#editPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#editPointComponent.shake(resetFormState);
+  };
+
   #handleFormSubmit = (point) => {
     const {basePrice, type} = point;
 
@@ -70,7 +81,6 @@ export default class NewPointPresenter {
       UpdateType.MINOR,
       {
         ...point,
-        //id: nanoid(),
         basePrice: Number(basePrice ?? 0),
         type: type ?? 'flight'
       }

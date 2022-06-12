@@ -102,6 +102,23 @@ export default class PointPresenter {
     }
   };
 
+  setAborting = () => {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#editPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#editPointComponent.shake(resetFormState);
+  };
+
   #replacePointToForm = () => {
     replace(this.#editPointComponent, this.#pointComponent);
     this.#changeMode();
@@ -126,13 +143,17 @@ export default class PointPresenter {
     );
   };
 
-  #handleFormSubmit = (point) => {  //нужна проверка изменения данных и типа обновления 7.1.6
-  //изменение цены и дат может привести к перерисовке списка => MINOR иначе PATCH
+  #handleFormSubmit = (point) => {
     const {basePrice, type} = point;
+
+    const isDatesEqual = this.#point.dateFrom === point.dateFrom && this.#point.dateTo === point.dateTo;
+    const isBasePriceTheSame = this.#point.basePrice === point.basePrice;
+    const isCheckedOffersTheSame = (this.#point.offers.length === point.offers.length) && this.#point.offers.every((offer, index) => offer === point.offers[index]);
+    const isPatchUpdate = isDatesEqual && isBasePriceTheSame && isCheckedOffersTheSame;
 
     this.#changeData(
       UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
+      isPatchUpdate ? UpdateType.PATCH : UpdateType.MINOR,
       {
         ...point,
         basePrice: Number(basePrice ?? 0),
