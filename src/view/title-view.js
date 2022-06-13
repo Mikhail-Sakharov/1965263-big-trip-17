@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 
 const DESTINATION_NAMES_MAX_COUNT = 3;
 
-function createTitleTemplate(destinationNames, totalPrice, duration) {
+const createTitleTemplate = (destinationNames, totalPrice, duration) => {
   const names = Array.from(destinationNames);
   const title = names.length <= DESTINATION_NAMES_MAX_COUNT ? names.join('-') : `${names[0]} — ... — ${names[names.length - 1]}`;
 
@@ -17,7 +17,7 @@ function createTitleTemplate(destinationNames, totalPrice, duration) {
               Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
             </p>
           </section>`;
-}
+};
 
 export default class TitleView extends AbstractView {
   #destinationNames = null;

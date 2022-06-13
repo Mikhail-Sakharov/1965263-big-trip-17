@@ -1,10 +1,6 @@
 import dayjs from 'dayjs';
 import {FilterType, SortType} from './const.js';
 
-const PointsCount = {
-  MIN: 1,
-  MAX: 10
-};
 const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
 const ALERT_SHOW_TIME = 3000;
@@ -13,21 +9,17 @@ const MessageText = {
   'destinations': 'Ошибка загрузки пунктов назначения'
 };
 
-function transformDateToISOString(date) {
-  return dayjs(date).toISOString();
-}
+const transformDateToISOString = (date) => dayjs(date).toISOString();
 
-function humanizePointDate(date, format) {
-  return dayjs(date).format(format);
-}
+const humanizePointDate = (date, format) => dayjs(date).format(format);
 
-function calculatePrice(pointsData, allOffers) {
+const calculatePrice = (pointsData, allOffers) => {
   const eventsTotalPrice = pointsData.reduce((totalPrice, point) => totalPrice + point.basePrice + (
     point.offers.reduce((offersTotalPrice, offerId) => offersTotalPrice + allOffers.find((offersBlock) => offersBlock.type === point.type).offers.find((offer) => offer.id === offerId).price, 0)
   ), 0);
 
   return eventsTotalPrice;
-}
+};
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
@@ -41,7 +33,13 @@ const sort = {
   [SortType.DEFAULT]: (points) => points.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom))
 };
 
-function returnTitleDuration(points) {
+const emptyMessageType = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PAST]: 'There are no past events now'
+};
+
+const returnTitleDuration = (points) => {
   const startDates = points.map((point) => point.dateFrom);
   const sortedStartDates = startDates.sort((nextItem, currentItem) => new Date(nextItem) - new Date(currentItem));
 
@@ -55,9 +53,9 @@ function returnTitleDuration(points) {
   const endDateDay = dayjs(sortedEndDates[0]).format('DD');
 
   return startDateMonth === endDateMonth ? `${startDateMonth} ${startDateDay} - ${endDateDay}` : `${startDateMonth} ${startDateDay} - ${endDateMonth} ${endDateDay}`;
-}
+};
 
-function duration(dateFrom, dateTo) {
+const duration = (dateFrom, dateTo) => {
   const start = dayjs(dateFrom);
   const end = dayjs(dateTo);
   const difference = end.diff(start, 'minute');
@@ -71,33 +69,9 @@ function duration(dateFrom, dateTo) {
   const minutesOutput = `${restMinutes < 10 ? `0${restMinutes}` : `${restMinutes}`}M`;
 
   return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
-}
+};
 
-function getRandomInteger(from, to) {
-  const min = Math.min(from, to);
-  const max = Math.max(from, to);
-  return Math.round(min + (max - min) * Math.random());
-}
-
-function generateDate() {
-  const MAX_GAP = 3000;
-  const minutesGap = getRandomInteger(-MAX_GAP, MAX_GAP);
-
-  return dayjs().add(minutesGap, 'minute').toISOString();
-}
-
-const pointsId = [];              // массив для хранения уникальных id для комментариев
-function getId() {
-  let id = getRandomInteger(PointsCount.MIN, PointsCount.MAX);
-  while (pointsId.some((item) => item === id)) {
-    id = getRandomInteger(PointsCount.MIN, PointsCount.MAX);
-  }
-
-  pointsId.push(id);
-  return id;
-}
-
-function showLoadFailMessage(messageType) {
+const showLoadFailMessage = (messageType) => {
   const alertContainerElement = document.createElement('div');
   alertContainerElement.classList.add('alert__container');
   const alertElement = document.createElement('div');
@@ -109,6 +83,16 @@ function showLoadFailMessage(messageType) {
   setTimeout(() => {
     alertContainerElement.remove();
   }, ALERT_SHOW_TIME);
-}
+};
 
-export {showLoadFailMessage, getRandomInteger, getId, transformDateToISOString, humanizePointDate, calculatePrice, returnTitleDuration, duration, generateDate, filter, sort, PointsCount};
+export {
+  showLoadFailMessage,
+  transformDateToISOString,
+  humanizePointDate,
+  calculatePrice,
+  returnTitleDuration,
+  duration,
+  filter,
+  sort,
+  emptyMessageType
+};

@@ -3,7 +3,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 import {humanizePointDate, duration} from '../util.js';
 import {DateTimeFormat} from '../const.js';
 
-function createOffersTemplate(checkedOffersIds, allOffers) {
+const createOffersTemplate = (checkedOffersIds, allOffers) => {
   let result = '';
   if (allOffers !== null) {
     checkedOffersIds.forEach((checkedOfferId) => {
@@ -17,9 +17,9 @@ function createOffersTemplate(checkedOffersIds, allOffers) {
                     </ul>`;
   }
   return result;
-}
+};
 
-function createPointTemplate(point, allOffers) {
+const createPointTemplate = (point, allOffers) => {
   const {type, destination, basePrice, isFavorite, dateFrom, dateTo, offers} = point;
 
   const destinationName = destination !== null ? destination.name : '';
@@ -64,7 +64,7 @@ function createPointTemplate(point, allOffers) {
       </div>
     </li>`
   );
-}
+};
 
 export default class PointView extends AbstractView {
   #point = null;
