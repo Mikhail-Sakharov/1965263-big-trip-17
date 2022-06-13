@@ -1,8 +1,6 @@
 import EditPointView from '../view/edit-point-view.js';
 import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
-import {OFFERS} from '../mock/offers.js';
-import {DESTINATIONS} from '../mock/destinations.js';
 import {BLANK_POINT} from '../const.js';
 
 export default class NewPointPresenter {
@@ -16,14 +14,14 @@ export default class NewPointPresenter {
     this.#changeData = changeData;
   }
 
-  init = (callback) => {
+  init = (callback, offers, destinations) => {
     this.#destroyCallback = callback;
 
     if (this.#editPointComponent !== null) {
       return;
     }
 
-    this.#editPointComponent = new EditPointView(BLANK_POINT, OFFERS, DESTINATIONS);
+    this.#editPointComponent = new EditPointView(BLANK_POINT, offers, destinations);
 
     this.#editPointComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#editPointComponent.setRollUpButtonClickHandler(this.#handleRollUpButtonClick);
@@ -45,13 +43,6 @@ export default class NewPointPresenter {
     this.#editPointComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-  };
-
-  #escKeyDownHandler = (evt) => {
-    if (['Escape', 'Esc'].includes(evt.key)) {
-      evt.preventDefault();
-      this.destroy();
-    }
   };
 
   setSaving = () => {
@@ -94,5 +85,12 @@ export default class NewPointPresenter {
 
   #handleDeleteClick = () => {
     this.destroy();
+  };
+
+  #escKeyDownHandler = (evt) => {
+    if (['Escape', 'Esc'].includes(evt.key)) {
+      evt.preventDefault();
+      this.destroy();
+    }
   };
 }

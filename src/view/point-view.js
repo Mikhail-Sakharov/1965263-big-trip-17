@@ -1,12 +1,9 @@
 import he from 'he';
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizePointDate, duration} from '../util.js';
+import {DateTimeFormat} from '../const.js';
 
-const HUMAN_FORMAT = 'MMM DD';
-const DATE_FORMAT = 'YYYY-MM-DD';
-const TIME_FORMAT = 'hh:mm';
-
-function createOffersTemplate(checkedOffersIds, allOffers) {
+const createOffersTemplate = (checkedOffersIds, allOffers) => {
   let result = '';
   if (allOffers !== null) {
     checkedOffersIds.forEach((checkedOfferId) => {
@@ -20,15 +17,15 @@ function createOffersTemplate(checkedOffersIds, allOffers) {
                     </ul>`;
   }
   return result;
-}
+};
 
-function createPointTemplate(point, allOffers) {
+const createPointTemplate = (point, allOffers) => {
   const {type, destination, basePrice, isFavorite, dateFrom, dateTo, offers} = point;
 
   const destinationName = destination !== null ? destination.name : '';
-  const eventDate = dateFrom !== null ? humanizePointDate(dateFrom, HUMAN_FORMAT) : '';
-  const startDate = dateFrom !== null ? humanizePointDate(dateFrom, TIME_FORMAT) : '';
-  const endDate = dateTo !== null ? humanizePointDate(dateTo, TIME_FORMAT) : '';
+  const eventDate = dateFrom !== null ? humanizePointDate(dateFrom, DateTimeFormat.HUMAN) : '';
+  const startDate = dateFrom !== null ? humanizePointDate(dateFrom, DateTimeFormat.TIME) : '';
+  const endDate = dateTo !== null ? humanizePointDate(dateTo, DateTimeFormat.TIME) : '';
   const price = basePrice !== null ? String(basePrice) : '';
   const eventType = type !== null ? type : 'flight';
   const eventDuration = duration(dateFrom, dateTo);
@@ -38,7 +35,7 @@ function createPointTemplate(point, allOffers) {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${humanizePointDate(dateFrom, DATE_FORMAT)}">${eventDate}</time>
+        <time class="event__date" datetime="${humanizePointDate(dateFrom, DateTimeFormat.FULL_DATE)}">${eventDate}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType}.png" alt="Event type icon">
         </div>
@@ -67,7 +64,7 @@ function createPointTemplate(point, allOffers) {
       </div>
     </li>`
   );
-}
+};
 
 export default class PointView extends AbstractView {
   #point = null;
