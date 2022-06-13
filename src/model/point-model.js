@@ -44,15 +44,15 @@ export default class PointModel extends Observable {
     try {
       this.#offers = await this.#pointsApiService.offers;
     } catch(err) {
-      this.#offers = null;  //придумать свой вариант обработки ошибки
+      this.#offers = null;
       showLoadFailMessage(MessageType.OFFERS);
     }
 
     try {
       this.#destinations = await this.#pointsApiService.destinations;
     } catch(err) {
-      this.#destinations = null;  //придумать свой вариант обработки ошибки
-      showLoadFailMessage(MessageType.OFFERS);
+      this.#destinations = null;
+      showLoadFailMessage(MessageType.DESTINATIONS);
     }
 
     this._notify(UpdateType.INIT);
@@ -66,23 +66,29 @@ export default class PointModel extends Observable {
 
       this._notify(updateType, updatedPoint);
     } catch(err) {
-      throw new Error('Can\'t update task');
+      throw new Error('Can\'t update point');
     }
   };
 
-  addPoint = (updateType, update) => {
-    this.#points = [
-      update,
-      ...this.#points,
-    ];
-
-    this._notify(updateType, update);
+  addPoint = async (updateType, update) => {
+    try {
+      const response = await this.#pointsApiService.addPoint(update);
+      const newPoint = this.#adaptToClient(response);
+      this.#points = [newPoint, ...this.#points];
+      this._notify(updateType, newPoint);
+    } catch(err) {
+      throw new Error('Can\'t add point');
+    }
   };
 
-  deletePoint = (updateType, update) => {
-    this.#points = [...this.#points.filter((point) => point.id !== update.id)];
-
-    this._notify(updateType);
+  deletePoint = async (updateType, update) => {
+    try {
+      await this.#pointsApiService.deletePoint(update);
+      this.#points = [...this.#points.filter((point) => point.id !== update.id)];
+      this._notify(updateType);
+    } catch(err) {
+      throw new Error('Can\'t delete point');
+    }
   };
 
   #adaptToClient = (point) => {

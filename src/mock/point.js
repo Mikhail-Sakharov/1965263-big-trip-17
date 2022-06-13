@@ -1,6 +1,5 @@
 import {getRandomInteger, generateDate, getId} from '../util.js';
 import dayjs from 'dayjs';
-//import {nanoid} from 'nanoid';
 import {DESTINATIONS} from './destinations.js';
 
 const POINT_TYPES = [
