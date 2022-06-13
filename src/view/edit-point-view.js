@@ -114,7 +114,7 @@ function createEditPointTemplate(state = BLANK_POINT, allOffers = null, destinat
                      <span class="visually-hidden">Price</span>
                      &euro;
                    </label>
-                   <input class="event__input event__input--price" id="event-price-${id}" type="text" name="event-price" value="${price}" ${isDisabled ? 'disabled' : ''}>
+                   <input class="event__input event__input--price" id="event-price-${id}" type="text" name="event-price" value="${price}" ${isDisabled ? 'disabled' : ''} pattern="[0-9]+">
                  </div>
                  <button class="event__save-btn btn btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
                  <button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>
@@ -176,6 +176,11 @@ export default class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
   };
 
+  setRollUpButtonClickHandler = (callback) => {
+    this._callback.rollUpButtonClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpButtonClickHandler);
+  };
+
   _restoreHandlers = () => {
     this.#setInnerHandlers();
     this.#setStartDatepicker();
@@ -185,9 +190,37 @@ export default class EditPointView extends AbstractStatefulView {
     this.setDeleteClickHandler(this._callback.deleteClick);
   };
 
-  setRollUpButtonClickHandler = (callback) => {
-    this._callback.rollUpButtonClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollUpButtonClickHandler);
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeToggleHandler);
+    this.element.querySelector('.event__details').addEventListener('click', this.#offersCheckHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationInputHandler);
+  };
+
+  #setStartDatepicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('input[name="event-start-time"]'),
+      {
+        enableTime: true,
+        dateFormat: DATEPICKER_FORMAT,
+        defaultDate: this._state.dateFrom,
+        maxDate: this._state.dateTo,
+        onChange: this.#startDateChangeHandler
+      }
+    );
+  };
+
+  #setEndDatepicker = () => {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('input[name="event-end-time"]'),
+      {
+        enableTime: true,
+        dateFormat: DATEPICKER_FORMAT,
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: this.#endDateChangeHandler
+      }
+    );
   };
 
   #startDateChangeHandler = ([userDate]) => {
@@ -247,39 +280,6 @@ export default class EditPointView extends AbstractStatefulView {
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(EditPointView.parseStateToPoint(this._state));
-  };
-
-  #setStartDatepicker = () => {
-    this.#datepicker = flatpickr(
-      this.element.querySelector('input[name="event-start-time"]'),
-      {
-        enableTime: true,
-        dateFormat: DATEPICKER_FORMAT,
-        defaultDate: this._state.dateFrom,
-        maxDate: this._state.dateTo,
-        onChange: this.#startDateChangeHandler
-      }
-    );
-  };
-
-  #setEndDatepicker = () => {
-    this.#datepicker = flatpickr(
-      this.element.querySelector('input[name="event-end-time"]'),
-      {
-        enableTime: true,
-        dateFormat: DATEPICKER_FORMAT,
-        defaultDate: this._state.dateTo,
-        minDate: this._state.dateFrom,
-        onChange: this.#endDateChangeHandler
-      }
-    );
-  };
-
-  #setInnerHandlers = () => {
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeToggleHandler);
-    this.element.querySelector('.event__details').addEventListener('click', this.#offersCheckHandler);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationInputHandler);
   };
 
   static parsePointToState = (point) => ({

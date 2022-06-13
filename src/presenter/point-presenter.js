@@ -1,12 +1,7 @@
 import PointView from '../view/point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import {render, replace, remove} from '../framework/render.js';
-import {UserAction, UpdateType} from '../const.js';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
+import {UserAction, UpdateType, Mode} from '../const.js';
 
 export default class PointPresenter {
   #listComponent = null;
@@ -66,15 +61,6 @@ export default class PointPresenter {
   destroy = () => {
     remove(this.#pointComponent);
     remove(this.#editPointComponent);
-  };
-
-  #escKeyDownHandler = (evt) => {
-    if (['Escape', 'Esc'].includes(evt.key)) {
-      evt.preventDefault();
-      this.#editPointComponent.reset(this.#point);
-      this.#replaceFormToPoint();
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
-    }
   };
 
   resetView = () => {
@@ -160,7 +146,7 @@ export default class PointPresenter {
         type: type ?? 'flight'
       }
     );
-    this.#replaceFormToPoint();
+
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
@@ -176,5 +162,14 @@ export default class PointPresenter {
       UpdateType.MINOR,
       point
     );
+  };
+
+  #escKeyDownHandler = (evt) => {
+    if (['Escape', 'Esc'].includes(evt.key)) {
+      evt.preventDefault();
+      this.#editPointComponent.reset(this.#point);
+      this.#replaceFormToPoint();
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
+    }
   };
 }

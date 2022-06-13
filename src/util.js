@@ -31,8 +31,8 @@ function calculatePrice(pointsData, allOffers) {
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
-  [FilterType.FUTURE]: (points) => points.filter((point) => point.dateFrom >= dayjs().toISOString()),
-  [FilterType.PAST]: (points) => points.filter((point) => point.dateTo < dayjs().toISOString())
+  [FilterType.FUTURE]: (points) => points.filter((point) => point.dateFrom >= dayjs().toISOString() || (point.dateFrom < dayjs().toISOString() && point.dateTo > dayjs().toISOString())),
+  [FilterType.PAST]: (points) => points.filter((point) => point.dateTo < dayjs().toISOString() || (point.dateFrom < dayjs().toISOString() && point.dateTo > dayjs().toISOString()))
 };
 
 const sort = {
@@ -67,8 +67,8 @@ function duration(dateFrom, dateTo) {
   const restMinutes = difference - (days * TOTAL_DAY_MINUTES_COUNT + restHours * HOUR_MINUTES_COUNT);
 
   const daysOutput = (days) ? `${days < 10 ? `0${days}` : `${days}`}D` : '';
-  const hoursOutput = (restHours) ? `${restHours < 10 ? `0${restHours}` : `${restHours}`}H` : '';
-  const minutesOutput = (restMinutes) ? `${restMinutes < 10 ? `0${restMinutes}` : `${restMinutes}`}M` : '';
+  const hoursOutput = (days || restHours) ? `${restHours < 10 ? `0${restHours}` : `${restHours}`}H` : '';
+  const minutesOutput = `${restMinutes < 10 ? `0${restMinutes}` : `${restMinutes}`}M`;
 
   return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
 }

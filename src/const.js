@@ -46,4 +46,20 @@ const BLANK_POINT = {
   type: null
 };
 
-export {FilterType, UserAction, UpdateType, SortType, EVENT_TYPES, BLANK_POINT};
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+const DateTimeFormat = {
+  HUMAN: 'MMM DD',
+  FULL_DATE: 'YYYY-MM-DD',
+  TIME: 'hh:mm'
+};
+
+export {FilterType, UserAction, UpdateType, SortType, EVENT_TYPES, BLANK_POINT, TimeLimit, Mode, DateTimeFormat};
