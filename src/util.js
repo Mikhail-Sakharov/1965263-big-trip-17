@@ -64,9 +64,9 @@ const duration = (dateFrom, dateTo) => {
   const restHours = Math.floor((difference - days * TOTAL_DAY_MINUTES_COUNT)/HOUR_MINUTES_COUNT);
   const restMinutes = difference - (days * TOTAL_DAY_MINUTES_COUNT + restHours * HOUR_MINUTES_COUNT);
 
-  const daysOutput = (days) ? `${days < 10 ? `0${days}` : `${days}`}D` : '';
-  const hoursOutput = (days || restHours) ? `${restHours < 10 ? `0${restHours}` : `${restHours}`}H` : '';
-  const minutesOutput = `${restMinutes < 10 ? `0${restMinutes}` : `${restMinutes}`}M`;
+  const daysOutput = (days) ? `${days.toString().padStart(2, '0')}D` : '';
+  const hoursOutput = (days || restHours) ? `${restHours.toString().padStart(2, '0')}H` : '';
+  const minutesOutput = `${restMinutes.toString().padStart(2, '0')}M`;
 
   return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
 };
