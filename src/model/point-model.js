@@ -1,11 +1,6 @@
 import Observable from '../framework/observable.js';
-import {UpdateType} from '../const.js';
+import {UpdateType, MessageType} from '../const.js';
 import {showLoadFailMessage} from '../util.js';
-
-const MessageType = {
-  OFFERS: 'offers',
-  DESTINATIONS: 'destinations'
-};
 
 const newPointButtonElement = document.querySelector('.trip-main__event-add-btn');
 

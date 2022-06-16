@@ -1,7 +1,7 @@
 import FiltersView from '../view/filters-view.js';
 import {render, replace, remove} from '../framework/render.js';
 import {FilterType, UpdateType} from '../const.js';
-import {filter} from '../util.js';
+import {filterFormat} from '../util.js';
 
 
 export default class FilterPresenter {
@@ -27,17 +27,17 @@ export default class FilterPresenter {
       {
         type: FilterType.EVERYTHING,
         name: 'Everything',
-        count: filter[FilterType.EVERYTHING](points).length,
+        count: filterFormat[FilterType.EVERYTHING](points).length,
       },
       {
         type: FilterType.FUTURE,
         name: 'Future',
-        count: filter[FilterType.FUTURE](points).length,
+        count: filterFormat[FilterType.FUTURE](points).length,
       },
       {
         type: FilterType.PAST,
         name: 'Past',
-        count: filter[FilterType.PAST](points).length,
+        count: filterFormat[FilterType.PAST](points).length,
       }
     ];
   }

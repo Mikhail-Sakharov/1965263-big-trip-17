@@ -26,8 +26,11 @@ export default class TitlePresenter {
   }
 
   init = () => {
+    if (this.#pointsModel.points.length === 0) {
+      return;
+    }
     const destinationNames = this.points.slice().sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom)).map((point) => point.destination.name);
-    const totalPrice = calculatePrice(this.points, this.offers);
+    const totalPrice = this.#pointsModel.offers !== null ? calculatePrice(this.points, this.offers) : '0';
     const titleDuration = returnTitleDuration(this.points);
 
     const prevTitleComponent = this.#titleComponent;

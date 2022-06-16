@@ -834,6 +834,9 @@ main {
 
 .alert__container {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
   position: fixed;
   top: 0;
   left: 0;
@@ -846,7 +849,7 @@ main {
 }
 
 .alert__message {
-  margin: 0 auto;
+  
   padding: 30px 20px;
   align-self: center;
   width: 350px;

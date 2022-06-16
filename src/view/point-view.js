@@ -30,7 +30,7 @@ const createPointTemplate = (point, allOffers) => {
   const eventType = type !== null ? type : 'flight';
   const eventDuration = duration(dateFrom, dateTo);
   const activeFavoriteButtonClass = isFavorite ? 'event__favorite-btn--active' : '';
-  const specifiedTypeOffers = allOffers.find((offer) => offer.type === eventType).offers;
+  const specifiedTypeOffers = allOffers !== null ? allOffers.find((offer) => offer.type === eventType).offers : null;
 
   return (
     `<li class="trip-events__item">

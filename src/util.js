@@ -5,6 +5,7 @@ const HOUR_MINUTES_COUNT = 60;
 const TOTAL_DAY_MINUTES_COUNT = 1440;
 const ALERT_SHOW_TIME = 3000;
 const MessageText = {
+  'points': 'Ошибка загрузки данных',
   'offers': 'Ошибка загрузки дополнительных опций',
   'destinations': 'Ошибка загрузки пунктов назначения'
 };
@@ -21,13 +22,13 @@ const calculatePrice = (pointsData, allOffers) => {
   return eventsTotalPrice;
 };
 
-const filter = {
+const filterFormat = {
   [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
   [FilterType.FUTURE]: (points) => points.filter((point) => point.dateFrom >= dayjs().toISOString() || (point.dateFrom < dayjs().toISOString() && point.dateTo > dayjs().toISOString())),
   [FilterType.PAST]: (points) => points.filter((point) => point.dateTo < dayjs().toISOString() || (point.dateFrom < dayjs().toISOString() && point.dateTo > dayjs().toISOString()))
 };
 
-const sort = {
+const sortFormat = {
   [SortType.TIME_DOWN]: (points) => points.sort((nextItem, currentItem) => (new Date(currentItem.dateTo) - new Date(currentItem.dateFrom)) - (new Date(nextItem.dateTo) - new Date(nextItem.dateFrom))),
   [SortType.PRICE_DOWN]: (points) => points.sort((nextItem, currentItem) => currentItem.basePrice - nextItem.basePrice),
   [SortType.DEFAULT]: (points) => points.sort((nextItem, currentItem) => new Date(nextItem.dateFrom) - new Date(currentItem.dateFrom))
@@ -71,8 +72,15 @@ const duration = (dateFrom, dateTo) => {
   return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
 };
 
+let alertContainerElement = null;
 const showLoadFailMessage = (messageType) => {
-  const alertContainerElement = document.createElement('div');
+  if (messageType === 'points') {
+    alertContainerElement = null;
+  }
+  if (!alertContainerElement) {
+    alertContainerElement = document.createElement('div');
+  }
+
   alertContainerElement.classList.add('alert__container');
   const alertElement = document.createElement('div');
   alertElement.classList.add('alert__message');
@@ -92,7 +100,7 @@ export {
   calculatePrice,
   returnTitleDuration,
   duration,
-  filter,
-  sort,
+  filterFormat,
+  sortFormat,
   emptyMessageType
 };

@@ -6,8 +6,8 @@ import EmptyListView from '../view/empty-list-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointPresenter from './new-point-presenter.js';
 import LoadingView from '../view/loading-view.js';
-import {SortType, UpdateType, UserAction, FilterType, TimeLimit} from '../const.js';
-import {filter, sort} from '../util.js';
+import {SortType, UpdateType, UserAction, FilterType, TimeLimit, MessageType} from '../const.js';
+import {filterFormat, sortFormat, showLoadFailMessage} from '../util.js';
 
 export default class ListPresenter {
   #listContainer = null;
@@ -45,14 +45,18 @@ export default class ListPresenter {
   createPoint = (callback) => {
     this.#currentSortType = SortType.DEFAULT;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    if (this.#pointsModel.points.length === 0 || this.#pointsModel.offers === null || this.#pointsModel.destinations === null) {
+      showLoadFailMessage(MessageType.POINTS);
+      return;
+    }
     this.#newPointPresenter.init(callback, this.#pointsModel.offers, this.#pointsModel.destinations);
   };
 
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[this.#filterType](points);
-    const sortedPoints = sort[this.#currentSortType](filteredPoints);
+    const filteredPoints = filterFormat[this.#filterType](points);
+    const sortedPoints = sortFormat[this.#currentSortType](filteredPoints);
 
     return sortedPoints;
   }

@@ -64,6 +64,12 @@ const DateTimeFormat = {
   DATEPICKER: 'd/m/y H:i'
 };
 
+const MessageType = {
+  POINTS: 'points',
+  OFFERS: 'offers',
+  DESTINATIONS: 'destinations'
+};
+
 export {
   FilterType,
   UserAction,
@@ -73,5 +79,6 @@ export {
   BLANK_POINT,
   TimeLimit,
   Mode,
-  DateTimeFormat
+  DateTimeFormat,
+  MessageType
 };
