@@ -53,7 +53,7 @@ export default class ListPresenter {
   };
 
   get points() {
-    this.#filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filterType;
     const points = this.#pointsModel.points;
     const filteredPoints = filterFormat[this.#filterType](points);
     const sortedPoints = sortFormat[this.#currentSortType](filteredPoints);
